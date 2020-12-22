@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:background="@drawable/border"
+    app:cardUseCompatPadding="true"
+    app:cardElevation="4dp"
+    android:outlineAmbientShadowColor="@color/black"
+    app:cardCornerRadius="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textViewHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="Header"
+        android:textSize="25sp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:contentDescription="header"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/textViewHeader"
+        android:gravity="center_vertical"
+        android:layout_alignParentBottom="true"
+        android:text="url or something"
+        android:layout_marginLeft="5dp"
+        android:textSize="16sp"/>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

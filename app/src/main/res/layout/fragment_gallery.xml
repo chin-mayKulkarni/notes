@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/forSnackbar"
+    tools:context=".ui.notes.GalleryFragment">
+
+    <TextView
+        android:id="@+id/text_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints"
+        />
+
+
+    <TextView
+        android:id="@+id/books_caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_disclaimer"
+        android:layout_below="@+id/text_gallery"
+        android:padding="10dp"
+        android:textSize="20sp"
+        />
+
+    <Spinner
+        android:id="@+id/branch_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/books_caption"
+        android:padding="15dp"
+        android:autofillHints="Semester"
+        android:scrollbarSize="10dp"
+        android:spinnerMode="dialog"/>
+
+    <Spinner
+        android:id="@+id/sem_spinner"
+        android:layout_below="@+id/branch_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:visibility="gone"
+        android:scrollbarSize="10dp"
+        android:spinnerMode="dropdown"
+        />
+    <Spinner
+        android:id="@+id/sub_spinner"
+        android:layout_below="@+id/sem_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:visibility="gone"
+        android:scrollbarSize="10dp"
+        android:spinnerMode="dropdown"
+        />
+
+    <FrameLayout
+        android:id="@+id/loading_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBlacktransparent"
+        android:contentDescription="LOADING"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/btn_go"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:enabled="false"
+        android:text="@string/go"/>
+
+
+
+
+</RelativeLayout>
