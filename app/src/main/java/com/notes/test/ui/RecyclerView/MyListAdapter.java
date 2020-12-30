@@ -56,7 +56,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
                 String title = "pdfName";
 
                // DownloadLink.downloadfile(url1,title,view.getContext());
-                DownloadLink.downloadfile(getFinalDownloadableLink(myListMainData.get(position).getDownloadableLink()),title,view.getContext());
+                DownloadLink.openInBrowser(getFinalDownloadableLink(myListMainData.get(position).getDownloadableLink()),title,view.getContext());
                 Toast.makeText(view.getContext(),"click on item: "+myListMainData.get(position).getHeader(),Toast.LENGTH_LONG).show();
             }
 

@@ -57,8 +57,7 @@ public class GalleryFragment extends Fragment {
     private GalleryViewModel galleryViewModel;
 
 
-    public GalleryFragment() {
-    }
+    public GalleryFragment() { }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              final ViewGroup container, Bundle savedInstanceState) {
@@ -75,7 +74,7 @@ public class GalleryFragment extends Fragment {
         jsonBranch.add("BRANCH");
         jsonSub.add("SUBJECT");
 
-        getBranchDetailsForNotes(getContext());
+        getBranchDetailsForNotes(getContext(), root);
         Spinner dropdown = root.findViewById(R.id.branch_spinner);
         final Spinner dropdown2 = root.findViewById(R.id.sem_spinner);
         final Spinner dropdown3 = root.findViewById(R.id.sub_spinner);
@@ -110,7 +109,7 @@ public class GalleryFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int pos,
                                        long id) {
                 branchPos = pos;
-                showProgressBar(root);
+                //showProgressBar(root);
                 if (jsonBranch.get(pos) != "BRANCH"){
                     dropdown2.setVisibility(View.VISIBLE);
                     if (dropdown3.getVisibility() == View.VISIBLE) {
@@ -139,7 +138,7 @@ public class GalleryFragment extends Fragment {
                 if (jsonSem.get(pos) != "SEMESTER"){
 
                     dropdown3.setVisibility(View.VISIBLE);
-                    getSubjectForNotes(getContext(), jsonSem.get(pos), jsonBranch.get(branchPos));
+                    getSubjectForNotes(getContext(), jsonSem.get(pos), jsonBranch.get(branchPos), root);
 
                     ArrayAdapter<String> adapter  = adapterFunList(jsonSub);
                     dropdown3.setAdapter(adapter);
@@ -190,13 +189,19 @@ public class GalleryFragment extends Fragment {
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
         root.setClickable(false);
-        new Handler().postDelayed(new Runnable() {
+/*        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 fl.setVisibility(View.GONE);
                 getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             }
-        }, 5000);
+        }, 5000);*/
+    }
+
+    public void hideProgressBar(View root){
+        root.findViewById(R.id.loading_overlay).setVisibility(View.GONE);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
     }
 
 
@@ -219,6 +224,7 @@ public class GalleryFragment extends Fragment {
         Intent intent = new Intent(context, DownloadLink.class);
         Bundle bundle = new Bundle();
         bundle.putString("JsonResponse", String.valueOf(s));
+        bundle.putString("fragmentName", "Notes");
         Log.d("Value passed:", String.valueOf(s));
         intent.putExtras(bundle);
         context.startActivity(intent);
@@ -226,7 +232,7 @@ public class GalleryFragment extends Fragment {
 
 
 //Calls API and gets branch and Sem list
-    public void getBranchDetailsForNotes(Context context) {
+    public void getBranchDetailsForNotes(Context context, final View root) {
 
         RequestQueue queue;
         queue = Volley.newRequestQueue(context);
@@ -255,13 +261,16 @@ public class GalleryFragment extends Fragment {
                             }
                             Log.d("jsonresponse", "sem" + jsonSem);
                             Log.d("jsonresponse", "branch json" + jsonBranch);
+                            hideProgressBar(root);
                         } catch (Exception e) {
                             e.printStackTrace();
+                            hideProgressBar(root);
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                hideProgressBar(root);
 
             }
         });
@@ -270,7 +279,7 @@ public class GalleryFragment extends Fragment {
 
 
 //Calls API and gets subjects list for selected branch and sem
-    public void getSubjectForNotes(final Context context, String sem, String branch) {
+    public void getSubjectForNotes(final Context context, String sem, String branch, final View root) {
 
         RequestQueue queue;
         queue = Volley.newRequestQueue(context);
@@ -291,8 +300,10 @@ public class GalleryFragment extends Fragment {
                                 jsonSub.add(sub);
                             }
                             Log.d("jsonresponse", "Sunject json" + jsonSub);
+                            hideProgressBar(root);
                         } catch (Exception e) {
                             e.printStackTrace();
+                            hideProgressBar(root);
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -302,6 +313,7 @@ public class GalleryFragment extends Fragment {
                 jsonSub.clear();
                 jsonSub.add("Subject");
                 Toast.makeText(context,"Some error has occured",Toast.LENGTH_LONG).show();
+                hideProgressBar(root);
 
             }
         });

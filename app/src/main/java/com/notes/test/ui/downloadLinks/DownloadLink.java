@@ -55,21 +55,24 @@ public class DownloadLink extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
+
 
         recyclerView = findViewById(R.id.recyclerView);
         myListDataList = new ArrayList<>();
 
 
-        toolBarLayout.setTitle("Testing");
+
         Bundle bundle = getIntent().getExtras();
         String Array = bundle.getString("JsonResponse");
+        String selectMethod = bundle.getString("fragmentName");
 
 
         try {
             JSONArray jsonArray = new JSONArray(Array);
 //extractData method will extract data from json and populate List
-            extractData(jsonArray);
+            if (selectMethod.equals("Notes"))
+                extractDataForNotes(jsonArray);
+            else extractDataforQP(jsonArray);
             //TODO : Implement recycler view using https://www.javatpoint.com/android-recyclerview-list-example
 
 
@@ -80,13 +83,32 @@ public class DownloadLink extends AppCompatActivity {
 
 
 //This method will extract data from json and populate List
-    private void extractData(JSONArray jsonArray) {
+    private void extractDataForNotes(JSONArray jsonArray) {
         for (int i = 0 ; i < jsonArray.length(); i++){
             try {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 MyListData myList = new MyListData();
                 myList.setDescription(jsonObject.getString("Description"));
                 myList.setHeader(jsonObject.getString("author"));
+                myList.setDownloadableLink(jsonObject.getString("file"));
+                myList.setPreviewImg(jsonObject.getString("file_snippet"));
+                myListDataList.add(myList);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        adapter = new MyListAdapter(this,myListDataList);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void extractDataforQP(JSONArray jsonArray) {
+        for (int i = 0 ; i < jsonArray.length(); i++){
+            try {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                MyListData myList = new MyListData();
+                myList.setDescription(jsonObject.getString("Description"));
+                myList.setHeader(jsonObject.getString("owner"));
                 myList.setDownloadableLink(jsonObject.getString("file"));
                 myList.setPreviewImg(jsonObject.getString("file_snippet"));
                 myListDataList.add(myList);
