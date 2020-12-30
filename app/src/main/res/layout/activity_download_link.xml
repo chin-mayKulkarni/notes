@@ -7,33 +7,8 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.downloadLinks.DownloadLink"
     android:orientation="vertical"
-    android:background="@color/colorWhitetransparent">
+    android:background="@color/colorBlacktransparent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ic_clear_margin"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:toolbarId="@+id/toolbar">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
 
     <WebView
         android:id="@+id/webView1"
@@ -46,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/click_on_below_links_to_download"
-        android:textColor="@color/white"
+        android:textColor="@color/colorAccent"
         android:layout_marginTop="50dp"
         android:layout_margin="10dp"
         android:textSize="25sp"
@@ -61,6 +36,7 @@
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
             android:id="@+id/recyclerView"
+            android:layout_margin="5dp"
             tools:context=".ui.downloadLinks.DownloadLink"/>
 
     </ScrollView>

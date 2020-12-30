@@ -1,4 +1,4 @@
-package com.notes.test.ui.home;
+package com.notes.test.ui.questionpaper;
 
 import android.content.Context;
 import android.util.Log;
@@ -44,7 +44,7 @@ public class HomeViewModel extends ViewModel {
                     @Override
                     public void onResponse(JSONArray response) {
                         jsonArray[0] = response.toString();
-                        GalleryFragment.openDownloadlinkActivity(jsonArray[0], context);
+                        HomeFragment.openDownloadlinkActivity(jsonArray[0], context);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -57,7 +57,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     private String getApi(String sem, String branch, String sub) {
-        String api = urlConstants.URL_TEST;
+        String api = urlConstants.URL_QP;
 
         api = api + "/" + stringNoSpace(sem) + "/" + stringNoSpace(branch) + "/" + stringNoSpace(sub);
         Log.d("api", "Api Value is:" + api);
