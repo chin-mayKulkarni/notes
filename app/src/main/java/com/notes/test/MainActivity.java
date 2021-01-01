@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         CardView cardNotes = findViewById(R.id.notes_card);
         CardView qpNotes = findViewById(R.id.qp_card);
         CardView whatsapp = findViewById(R.id.support_card);
+        CardView videoPlayer = findViewById(R.id.video_card);
         cardNotes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,6 +70,16 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(intent);
             }
         });
+        videoPlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,
+                        FragmentHolder.class);
+                intent.putExtra("Header", "Video Player");
+                intent.putExtra("fragmentName", "VideoPlayer");
+                MainActivity.this.startActivity(intent);
+            }
+        });
         whatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,11 +90,6 @@ public class MainActivity extends AppCompatActivity {
                 intentWhatsapp.setPackage("com.whatsapp");
                 startActivity(intentWhatsapp);
 
-                /*Intent intent = new Intent(MainActivity.this,
-                        FragmentHolder.class);
-                intent.putExtra("Header", "Question Papers");
-                intent.putExtra("fragmentName", "HomeFragment");
-                MainActivity.this.startActivity(intent);*/
             }
         });
 

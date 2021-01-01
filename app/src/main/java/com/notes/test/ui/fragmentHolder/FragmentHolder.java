@@ -4,9 +4,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
 import com.notes.test.R;
 import com.notes.test.ui.notes.GalleryFragment;
@@ -18,6 +21,10 @@ public class FragmentHolder extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment_holder);
+        VideoView vidView = (VideoView)findViewById(R.id.myVideo);
+        MediaController vidControl = new MediaController(this);
+        vidControl.setAnchorView(vidView);
+        vidView.setMediaController(vidControl);
 
         Bundle bundle = getIntent().getExtras();
         String header = bundle.getString("Header");
@@ -28,18 +35,30 @@ public class FragmentHolder extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(header);
         }
-        displayFragmentInActivity(fragmentName);
+        String vidAddress = "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4";
+        Uri vidUri = Uri.parse(vidAddress);
+        vidView.setVideoURI(vidUri);
+        vidView.start();
+       // displayFragmentInActivity(fragmentName);
 
     }
 
     private void displayFragmentInActivity(String fragmentName) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragmentName.equals("GalleryFragment")){
-            GalleryFragment fragmentSent = new GalleryFragment();
-            fragmentManager.beginTransaction().replace(R.id.fragment_layout , fragmentSent, "tag").commit();
-        } else if (fragmentName.equals("HomeFragment")){
-            HomeFragment fragmentSent = new HomeFragment();
-            fragmentManager.beginTransaction().replace(R.id.fragment_layout , fragmentSent, "tag").commit();
+        if (fragmentName != null) {
+            if (fragmentName.equals("GalleryFragment")) {
+                GalleryFragment fragmentSent = new GalleryFragment();
+                fragmentManager.beginTransaction().replace(R.id.fragment_layout, fragmentSent, "tag").commit();
+            } else if (fragmentName.equals("HomeFragment")) {
+                HomeFragment fragmentSent = new HomeFragment();
+                fragmentManager.beginTransaction().replace(R.id.fragment_layout, fragmentSent, "tag").commit();
+            } else if(fragmentName.equals("VideoPlayer")){
+                String vidAddress = "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4";
+                Uri vidUri = Uri.parse(vidAddress);
+                /*vidView.setVideoURI(vidUri);
+                vidView.start();*/
+
+            }
         }
     }
 

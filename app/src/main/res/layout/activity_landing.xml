@@ -160,7 +160,7 @@
                 android:layout_below="@+id/useful_text">
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/about_card"
+                    android:id="@+id/video_card"
                     android:layout_width="wrap_content"
                     android:layout_height="80dp"
                     android:layout_below="@+id/qp_card"
@@ -190,7 +190,7 @@
                             android:layout_marginLeft="5dp"
                             android:layout_marginBottom="8dp"
                             android:textAlignment="center"
-                            android:text="About us!"
+                            android:text="Play Video"
                             android:textColor="@color/black"
                             android:textSize="15sp" />
 
