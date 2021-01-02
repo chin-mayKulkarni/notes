@@ -1,5 +1,10 @@
 package com.notes.test;
 
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -8,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -16,7 +22,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.navigation.NavigationView;
 import com.notes.test.ui.MySingleton;
+import com.notes.test.ui.fragmentHolder.FragmentHolder;
+import com.notes.test.ui.notes.GalleryFragment;
 
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -33,69 +43,107 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     public ArrayList<String> jsonSem , jsonBranch;
+    public static String FACEBOOK_URL = "https://www.facebook.com/chinmay.kulkarni.75839";
+    public static String FACEBOOK_PAGE_ID = "chinmay.kulkarni.75839";
 
     private AppBarConfiguration mAppBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_gallery, R.id.nav_home,  R.id.nav_slideshow)
-                .setDrawerLayout(drawer)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+        setContentView(R.layout.activity_landing);
+        CardView cardNotes = findViewById(R.id.notes_card);
+        CardView qpNotes = findViewById(R.id.qp_card);
+        LinearLayout whatsapp = findViewById(R.id.ButtonFacebook);
+        CardView syllabuscopy = findViewById(R.id.sc_card);
+        LinearLayout instagram = findViewById(R.id.ButtonInstagram);
+        cardNotes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,
+                        FragmentHolder.class);
+                intent.putExtra("Header", "Notes");
+                intent.putExtra("fragmentName", "GalleryFragment");
+                MainActivity.this.startActivity(intent);
+            }
+        });
+        qpNotes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,
+                        FragmentHolder.class);
+                intent.putExtra("Header", "Question Papers");
+                intent.putExtra("fragmentName", "HomeFragment");
+                MainActivity.this.startActivity(intent);
+            }
+        });
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                /*Intent intentWhatsapp = new Intent(Intent.ACTION_VIEW);
+                String url = "https://chat.whatsapp.com/EDkwCsWCErIF5AWNuVmYXJ";
+                intentWhatsapp.setData(Uri.parse(url));
+                intentWhatsapp.setPackage("com.whatsapp");
+                startActivity(intentWhatsapp);*/
+
+                /*Intent intent = new Intent(MainActivity.this,
+                        FragmentHolder.class);
+                intent.putExtra("Header", "About us");
+                intent.putExtra("fragmentName", "AboutUs");
+                MainActivity.this.startActivity(intent);*/
+
+                Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+                String facebookUrl = getFacebookPageURL(getApplication());
+                facebookIntent.setData(Uri.parse(facebookUrl));
+                startActivity(facebookIntent);
+            }
+        });
+        syllabuscopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,
+                        FragmentHolder.class);
+                intent.putExtra("Header", "Syllabus Copy");
+                intent.putExtra("fragmentName", "Syllabus Copy");
+                MainActivity.this.startActivity(intent);
+            }
+        });
+        instagram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openInstagram("https://www.instagram.com/chin_mai_kulkarni/");
+            }
+        });
 
     }
 
-    public ArrayList<String> getBranchDetailsForNotes() {
+    private void openInstagram(String url){
+        Uri uri = Uri.parse(url);
+        Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
 
-        RequestQueue queue;
-        queue = MySingleton.getInstance(getApplicationContext()).getRequestQueue();
+        likeIng.setPackage("com.instagram.android");
 
+        try {
+            startActivity(likeIng);
+        } catch (ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(url)));
+        }
+    }
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                urlConstants.URL_MASTER,
-                (JSONObject) null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONObject jsonObject = response;
-                            JSONArray jsonArray = jsonObject.getJSONArray("semester");
-                            for (int i =0; i<jsonArray.length(); i++){
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                String sem = jsonObject1.getString("sem_name");
-                                jsonSem.add(sem);
-                            }
-                            JSONArray jsonBranchArray = jsonObject.getJSONArray("branches");
-                            for (int i =0; i<jsonBranchArray.length(); i++){
-                                JSONObject jsonObject1 = jsonBranchArray.getJSONObject(i);
-                                String branch = jsonObject1.getString("branch_name");
-                                jsonBranch.add(branch);
-                            }
-                            Log.d("jsonresponse", "sem" + jsonSem);
-                            Log.d("jsonresponse", "branch json" + jsonBranch);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
+    private String getFacebookPageURL(Context onClickListener) {
+        PackageManager packageManager = onClickListener.getPackageManager();
+        try {
+            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
+            if (versionCode >= 3002850) { //newer versions of fb app
+                return "fb://facewebmodal/f?href=" + FACEBOOK_URL;
+            } else { //older versions of fb app
+                return "fb://page/" + FACEBOOK_PAGE_ID;
             }
-        });
-        queue.add(jsonObjectRequest);
-        return jsonBranch;
+        } catch (PackageManager.NameNotFoundException e) {
+            return FACEBOOK_URL; //normal web url
+        }
     }
 
     @Override

@@ -11,8 +11,6 @@ import android.os.Environment;
 import android.view.View;
 import android.webkit.WebView;
 
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
