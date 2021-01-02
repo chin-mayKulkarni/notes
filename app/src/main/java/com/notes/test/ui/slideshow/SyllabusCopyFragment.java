@@ -14,16 +14,16 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.notes.test.R;
 
-public class SlideshowFragment extends Fragment {
+public class SyllabusCopyFragment extends Fragment {
 
-    private SlideshowViewModel slideshowViewModel;
+    private SyllabusCopyViewModel syllabusCopyViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        slideshowViewModel = ViewModelProviders.of(this).get(SlideshowViewModel.class);
+        syllabusCopyViewModel = ViewModelProviders.of(this).get(SyllabusCopyViewModel.class);
         View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
         final TextView textView = root.findViewById(R.id.text_slideshow);
-        slideshowViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        syllabusCopyViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

@@ -1,6 +1,9 @@
 package com.notes.test;
 
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -39,6 +43,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     public ArrayList<String> jsonSem , jsonBranch;
+    public static String FACEBOOK_URL = "https://www.facebook.com/chinmay.kulkarni.75839";
+    public static String FACEBOOK_PAGE_ID = "chinmay.kulkarni.75839";
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -48,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_landing);
         CardView cardNotes = findViewById(R.id.notes_card);
         CardView qpNotes = findViewById(R.id.qp_card);
-        CardView whatsapp = findViewById(R.id.support_card);
+        LinearLayout whatsapp = findViewById(R.id.ButtonFacebook);
+        CardView syllabuscopy = findViewById(R.id.sc_card);
+        LinearLayout instagram = findViewById(R.id.ButtonInstagram);
         cardNotes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,20 +81,69 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intentWhatsapp = new Intent(Intent.ACTION_VIEW);
+                /*Intent intentWhatsapp = new Intent(Intent.ACTION_VIEW);
                 String url = "https://chat.whatsapp.com/EDkwCsWCErIF5AWNuVmYXJ";
                 intentWhatsapp.setData(Uri.parse(url));
                 intentWhatsapp.setPackage("com.whatsapp");
-                startActivity(intentWhatsapp);
+                startActivity(intentWhatsapp);*/
 
                 /*Intent intent = new Intent(MainActivity.this,
                         FragmentHolder.class);
-                intent.putExtra("Header", "Question Papers");
-                intent.putExtra("fragmentName", "HomeFragment");
+                intent.putExtra("Header", "About us");
+                intent.putExtra("fragmentName", "AboutUs");
                 MainActivity.this.startActivity(intent);*/
+
+                Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+                String facebookUrl = getFacebookPageURL(getApplication());
+                facebookIntent.setData(Uri.parse(facebookUrl));
+                startActivity(facebookIntent);
+            }
+        });
+        syllabuscopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,
+                        FragmentHolder.class);
+                intent.putExtra("Header", "Syllabus Copy");
+                intent.putExtra("fragmentName", "Syllabus Copy");
+                MainActivity.this.startActivity(intent);
+            }
+        });
+        instagram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openInstagram("https://www.instagram.com/chin_mai_kulkarni/");
             }
         });
 
+    }
+
+    private void openInstagram(String url){
+        Uri uri = Uri.parse(url);
+        Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
+
+        likeIng.setPackage("com.instagram.android");
+
+        try {
+            startActivity(likeIng);
+        } catch (ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(url)));
+        }
+    }
+
+    private String getFacebookPageURL(Context onClickListener) {
+        PackageManager packageManager = onClickListener.getPackageManager();
+        try {
+            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
+            if (versionCode >= 3002850) { //newer versions of fb app
+                return "fb://facewebmodal/f?href=" + FACEBOOK_URL;
+            } else { //older versions of fb app
+                return "fb://page/" + FACEBOOK_PAGE_ID;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            return FACEBOOK_URL; //normal web url
+        }
     }
 
     @Override
