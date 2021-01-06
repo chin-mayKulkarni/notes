@@ -143,7 +143,16 @@ public class HomeFragment extends Fragment {
                                        long id) {
                 branchPos = pos;
                 // showProgressBar(root);
-                if (jsonBranch.get(pos) != "BRANCH") {
+                if (jsonBranch.get(pos).equals("P cycle") || jsonBranch.get(pos).equals("C cycle")) {
+                    getSubjectForNotes(getContext(), "1st SEMESTER", jsonBranch.get(branchPos), root);
+                    ArrayAdapter<String> adapter = adapterFunList(jsonSub);
+                    dropdown2.setVisibility(View.GONE);
+                    dropdown3.setAdapter(adapter);
+                    dropdown3.setSelection(0);
+                    showProgressBar(root);
+                    semSel = "1st SEMESTER";
+                    dropdown3.setVisibility(View.VISIBLE);
+                } else if (jsonBranch.get(pos) != "BRANCH") {
                     dropdown2.setVisibility(View.VISIBLE);
                     if (dropdown3.getVisibility() == View.VISIBLE) {
                         dropdown3.setVisibility(View.GONE);
