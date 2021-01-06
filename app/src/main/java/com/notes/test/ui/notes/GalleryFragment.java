@@ -107,18 +107,27 @@ public class GalleryFragment extends Fragment {
                                        long id) {
                 branchPos = pos;
                 //showProgressBar(root);
-                if (jsonBranch.get(pos) != "BRANCH"){
-                    dropdown2.setVisibility(View.VISIBLE);
-                    if (dropdown3.getVisibility() == View.VISIBLE) {
-                        dropdown3.setVisibility(View.GONE);
-                        ArrayAdapter<String> adapter  = adapterFunList(jsonSem);
-                        dropdown2.setAdapter(adapter);
-                        btn_go.setEnabled(false);
-                    }
-                } else {
+                if (jsonBranch.get(pos).equals("P cycle") || jsonBranch.get(pos).equals("C cycle")) {
+                    getSubjectForNotes(getContext(), "1st SEMESTER", jsonBranch.get(branchPos), root);
+                    ArrayAdapter<String> adapter = adapterFunList(jsonSub);
                     dropdown2.setVisibility(View.GONE);
-                    dropdown3.setVisibility(View.GONE);
-                }
+                    dropdown3.setAdapter(adapter);
+                    dropdown3.setSelection(0);
+                    showProgressBar(root);
+                    semSel = "1st SEMESTER";
+                    dropdown3.setVisibility(View.VISIBLE);
+                } else if (jsonBranch.get(pos) != "BRANCH") {
+                        dropdown2.setVisibility(View.VISIBLE);
+                        if (dropdown3.getVisibility() == View.VISIBLE) {
+                            dropdown3.setVisibility(View.GONE);
+                            ArrayAdapter<String> adapter = adapterFunList(jsonSem);
+                            dropdown2.setAdapter(adapter);
+                            btn_go.setEnabled(false);
+                        }
+                    } else {
+                        dropdown2.setVisibility(View.GONE);
+                        dropdown3.setVisibility(View.GONE);
+                    }
                 Toast.makeText(getContext(), "onItemSelected"+ jsonBranch.get(pos), Toast.LENGTH_LONG).show();
                 branchSel = jsonBranch.get(pos);
 
