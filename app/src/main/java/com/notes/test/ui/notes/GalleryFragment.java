@@ -4,20 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +41,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class GalleryFragment extends Fragment {
 
@@ -240,7 +237,7 @@ public class GalleryFragment extends Fragment {
 
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                urlConstants.URL_MASTER,
+                appendDeviceId(urlConstants.URL_MASTER),
                 (JSONObject) null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -277,6 +274,10 @@ public class GalleryFragment extends Fragment {
         queue.add(jsonObjectRequest);
     }
 
+    public String appendDeviceId(String url){
+        url = url + "/" + galleryViewModel.getDatFromSharedpref(getContext());
+        return url;
+    }
 
 //Calls API and gets subjects list for selected branch and sem
     public void getSubjectForNotes(final Context context, String sem, String branch, final View root) {
@@ -324,6 +325,7 @@ public class GalleryFragment extends Fragment {
 //Method which appends Sem and Branch to base url and returns sub api.
     private String getSubUrl(String sem, String branch) {
         String subUrl = urlConstants.URL_GET_SUBJECT_BASE + "/" + galleryViewModel.stringNoSpace(sem) + "/" + galleryViewModel.stringNoSpace(branch);
+        subUrl = appendDeviceId(subUrl);
         Log.d("json", "subURL::" + subUrl);
         return subUrl;
     }

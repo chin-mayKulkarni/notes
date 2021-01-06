@@ -1,6 +1,7 @@
 package com.notes.test.ui.questionpaper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,6 +19,8 @@ import com.notes.test.ui.notes.GalleryFragment;
 import com.notes.test.urlConstants;
 
 import org.json.JSONArray;
+
+import static android.os.ParcelFileDescriptor.MODE_APPEND;
 
 public class HomeViewModel extends ViewModel {
 
@@ -38,7 +41,7 @@ public class HomeViewModel extends ViewModel {
         final String[] jsonArray = new String[1];
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
-                /*urlConstants.URL_TEST */getApi(sem, branch, sub),
+                /*urlConstants.URL_TEST */getApi(sem, branch, sub, context),
                 (JSONArray) null,
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -56,13 +59,20 @@ public class HomeViewModel extends ViewModel {
         queue.add(jsonArrayRequest);
     }
 
-    private String getApi(String sem, String branch, String sub) {
+    private String getApi(String sem, String branch, String sub, Context context) {
         String api = urlConstants.URL_QP;
 
         api = api + "/" + stringNoSpace(sem) + "/" + stringNoSpace(branch) + "/" + stringNoSpace(sub);
+        api = appendDeviceId(api, context);
         Log.d("api", "Api Value is:" + api);
         return api;
     }
+
+    public String appendDeviceId(String url, Context context){
+        url = url + "/" + getDatFromSharedpref(context);
+        return url;
+    }
+
 
     public String stringNoSpace(String str){
         String stringWithoutSpaces = str.replaceAll("\\s+", "%20");
@@ -70,4 +80,12 @@ public class HomeViewModel extends ViewModel {
     }
 
 
+    public String getDatFromSharedpref(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("FirstSharedpref", MODE_APPEND);
+        String deviceID = sharedPreferences.getString("DeviceID", null);
+        String version = sharedPreferences.getString("Version", " ");
+        Log.d("fromSharedpred", deviceID);
+        return deviceID;
+
+    }
 }

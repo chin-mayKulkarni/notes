@@ -3,6 +3,7 @@ package com.notes.test;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,11 +15,13 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.navigation.NavigationView;
 import com.notes.test.ui.MySingleton;
@@ -39,6 +42,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
+//Device id generation
+        if (getDatFromSharedpref() ==null){
+            String dev = generateDeviceId();
+        }
+        callInitialLoadApi(getApplicationContext());
+
         CardView cardNotes = findViewById(R.id.notes_card);
         CardView qpNotes = findViewById(R.id.qp_card);
         LinearLayout whatsapp = findViewById(R.id.ButtonFacebook);
@@ -115,6 +125,71 @@ public class MainActivity extends AppCompatActivity {
                 openInstagram("https://www.instagram.com/chin_mai_kulkarni/");
             }
         });
+
+    }
+
+    private void callInitialLoadApi(final Context context) {
+            final RequestQueue queue;
+            queue = MySingleton.getInstance(context).getRequestQueue();
+            final String[] jsonArray = new String[1];
+
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
+                    /*urlConstants.URL_TEST */getApi(),
+                    (JSONArray) null,
+                    new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            jsonArray[0] = response.toString();
+                            Log.d("response", jsonArray[0]);
+                            //GalleryFragment.openDownloadlinkActivity(jsonArray[0], context);
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context,"Notes are not available for selected Subject",Toast.LENGTH_LONG).show();
+                    Log.d("error ", "error occured :::::" + error);
+                }
+            });
+            queue.add(jsonArrayRequest);
+    }
+
+    private String getApi() {
+        String api;
+        api = urlConstants.URL_DEVICE_ID + "/" + getDatFromSharedpref();
+        return api;
+    }
+
+    public String getDatFromSharedpref() {
+        SharedPreferences sharedPreferences = getSharedPreferences("FirstSharedpref", 0);
+        String deviceID = sharedPreferences.getString("DeviceID", null);
+        String version = sharedPreferences.getString("Version", " ");
+        Log.d("fromSharedpred", "This is message : " +deviceID);
+        return deviceID;
+    }
+
+    private String generateDeviceId() {
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 16;
+        Random random = new Random();
+        StringBuilder buffer = new StringBuilder(targetStringLength);
+        for (int i = 0; i < targetStringLength; i++) {
+            int randomLimitedInt = leftLimit + (int)
+                    (random.nextFloat() * (rightLimit - leftLimit + 1));
+            buffer.append((char) randomLimitedInt);
+        }
+        String generatedString = buffer.toString();
+        Log.d("Device ID","This is device id:" + generatedString);
+        storeDataInSharedPref(generatedString);
+        return generatedString;
+    }
+
+    private void storeDataInSharedPref(String generatedString) {
+        SharedPreferences sharedPreferences = getSharedPreferences("FirstSharedpref", MODE_PRIVATE);
+        SharedPreferences.Editor myEdit = sharedPreferences.edit();
+        myEdit.putString("DeviceID", generatedString);
+        myEdit.putString("Version", "1.0.2");
+        myEdit.commit();
 
     }
 
