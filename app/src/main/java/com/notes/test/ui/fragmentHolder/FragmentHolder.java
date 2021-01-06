@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import com.notes.test.R;
 import com.notes.test.ui.notes.GalleryFragment;
 import com.notes.test.ui.questionpaper.HomeFragment;
-import com.notes.test.ui.slideshow.SyllabusCopyFragment;
+import com.notes.test.ui.SyllabusCopy.SyllabusCopyFragment;
 
 public class FragmentHolder extends AppCompatActivity {
 

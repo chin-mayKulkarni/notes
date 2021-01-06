@@ -71,9 +71,9 @@ public class HomeFragment extends Fragment {
 
 
 
-        if (isInternetConnected(this)) {
-            processWithInternet(root);
-        } else showCustomDialogue();
+        if (!isInternetConnected(this)) {
+            showCustomDialogue();
+        }
 
         return root;
     }
@@ -86,6 +86,11 @@ public class HomeFragment extends Fragment {
         if (isInternetConnected(this)) {
             processWithInternet(getView());
         } else showCustomDialogue();
+    }
+
+    public String appendDeviceId(String url){
+        url = url + "/" + homeViewModel.getDatFromSharedpref(getContext());
+        return url;
     }
 
 
@@ -274,7 +279,7 @@ public class HomeFragment extends Fragment {
 
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                urlConstants.URL_MASTER,
+                appendDeviceId(urlConstants.URL_MASTER),
                 (JSONObject) null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -364,6 +369,7 @@ public class HomeFragment extends Fragment {
     //Method which appends Sem and Branch to base url and returns sub api.
     private String getSubUrl(String sem, String branch) {
         String subUrl = urlConstants.URL_GET_SUBJECT_BASE + "/" + homeViewModel.stringNoSpace(sem) + "/" + homeViewModel.stringNoSpace(branch);
+        subUrl = appendDeviceId(subUrl);
         Log.d("json", "subURL::" + subUrl);
         return subUrl;
     }

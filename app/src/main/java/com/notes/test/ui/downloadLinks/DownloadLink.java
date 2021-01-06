@@ -70,7 +70,9 @@ public class DownloadLink extends AppCompatActivity {
 //extractData method will extract data from json and populate List
             if (selectMethod.equals("Notes"))
                 extractDataForNotes(jsonArray);
-            else extractDataforQP(jsonArray);
+            else if (selectMethod.equals("QP")){
+                extractDataforQP(jsonArray);
+            } else extractDataforSyllabus(jsonArray);
             //TODO : Implement recycler view using https://www.javatpoint.com/android-recyclerview-list-example
 
 
@@ -109,6 +111,25 @@ public class DownloadLink extends AppCompatActivity {
                 myList.setHeader(jsonObject.getString("owner"));
                 myList.setDownloadableLink(jsonObject.getString("file"));
                 myList.setPreviewImg(jsonObject.getString("file_snippet"));
+                myListDataList.add(myList);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        adapter = new MyListAdapter(this,myListDataList);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void extractDataforSyllabus(JSONArray jsonArray) {
+        for (int i = 0 ; i < jsonArray.length(); i++){
+            try {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                MyListData myList = new MyListData();
+                myList.setDescription(jsonObject.getString("id"));
+                myList.setHeader(jsonObject.getString("updated_on"));
+                myList.setDownloadableLink(jsonObject.getString("file"));
+                myList.setPreviewImg(jsonObject.getString("file"));
                 myListDataList.add(myList);
             } catch (JSONException e) {
                 e.printStackTrace();
