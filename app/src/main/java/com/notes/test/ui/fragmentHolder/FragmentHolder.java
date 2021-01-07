@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.notes.test.R;
+import com.notes.test.ui.feedback.FeedbackFragment;
 import com.notes.test.ui.notes.GalleryFragment;
 import com.notes.test.ui.questionpaper.HomeFragment;
 import com.notes.test.ui.SyllabusCopy.SyllabusCopyFragment;
@@ -41,9 +42,13 @@ public class FragmentHolder extends AppCompatActivity {
         } else if (fragmentName.equals("HomeFragment")){
             HomeFragment fragmentSent = new HomeFragment();
             fragmentManager.beginTransaction().replace(R.id.fragment_layout , fragmentSent, "tag").commit();
+        } else if (fragmentName.equals("feedback")){
+            FeedbackFragment fragmentSent = new FeedbackFragment();
+            fragmentManager.beginTransaction().replace(R.id.fragment_layout , fragmentSent, "tag").commit();
         } else {
             SyllabusCopyFragment fragmentSent = new SyllabusCopyFragment();
             fragmentManager.beginTransaction().replace(R.id.fragment_layout , fragmentSent, "tag").commit();
+
         }
     }
 

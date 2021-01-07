@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,6 +26,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.navigation.NavigationView;
 import com.notes.test.ui.MySingleton;
+import com.notes.test.ui.feedback.FeedbackFragment;
 import com.notes.test.ui.fragmentHolder.FragmentHolder;
 import com.notes.test.ui.notes.GalleryFragment;
 
@@ -64,9 +66,24 @@ public class MainActivity extends AppCompatActivity {
 
         CardView cardNotes = findViewById(R.id.notes_card);
         CardView qpNotes = findViewById(R.id.qp_card);
-        LinearLayout whatsapp = findViewById(R.id.ButtonFacebook);
+        LinearLayout facebook = findViewById(R.id.ButtonFacebook);
         CardView syllabuscopy = findViewById(R.id.sc_card);
         LinearLayout instagram = findViewById(R.id.ButtonInstagram);
+        LinearLayout telegram = findViewById(R.id.buttonTelegram);
+        LinearLayout whatsapp = findViewById(R.id.ButtonWhatsapp);
+        TextView feedback = findViewById(R.id.feedbackText);
+
+        feedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,
+                        FragmentHolder.class);
+                intent.putExtra("Header", "Feedback");
+                intent.putExtra("fragmentName", "feedback");
+                MainActivity.this.startActivity(intent);
+
+            }
+        });
         cardNotes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(intent);
             }
         });
-        whatsapp.setOnClickListener(new View.OnClickListener() {
+        facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -107,6 +124,26 @@ public class MainActivity extends AppCompatActivity {
                 String facebookUrl = getFacebookPageURL(getApplication());
                 facebookIntent.setData(Uri.parse(facebookUrl));
                 startActivity(facebookIntent);
+            }
+        });
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentWhatsapp = new Intent(Intent.ACTION_VIEW);
+                String url = "https://chat.whatsapp.com/EDkwCsWCErIF5AWNuVmYXJ";
+                intentWhatsapp.setData(Uri.parse(url));
+                intentWhatsapp.setPackage("com.whatsapp");
+                startActivity(intentWhatsapp);
+            }
+        });
+        telegram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentWhatsapp = new Intent(Intent.ACTION_VIEW);
+                String url = "https://t.me/joinchat/FzuqiL62dreK2Pkx";
+                intentWhatsapp.setData(Uri.parse(url));
+                intentWhatsapp.setPackage("org.telegram.messenger");
+                startActivity(intentWhatsapp);
             }
         });
         syllabuscopy.setOnClickListener(new View.OnClickListener() {
@@ -131,26 +168,26 @@ public class MainActivity extends AppCompatActivity {
     private void callInitialLoadApi(final Context context) {
             final RequestQueue queue;
             queue = MySingleton.getInstance(context).getRequestQueue();
-            final String[] jsonArray = new String[1];
+            final String[] jsonObject = new String[1];
 
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                     /*urlConstants.URL_TEST */getApi(),
-                    (JSONArray) null,
-                    new Response.Listener<JSONArray>() {
+                    (JSONObject) null,
+                    new Response.Listener<JSONObject>() {
+
                         @Override
-                        public void onResponse(JSONArray response) {
-                            jsonArray[0] = response.toString();
-                            Log.d("response", jsonArray[0]);
-                            //GalleryFragment.openDownloadlinkActivity(jsonArray[0], context);
+                        public void onResponse(JSONObject response) {
+                            jsonObject[0] = response.toString();
+                            Log.d("response", jsonObject[0]);
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context,"Notes are not available for selected Subject",Toast.LENGTH_LONG).show();
+                    Toast.makeText(context,"Some error has occured",Toast.LENGTH_LONG).show();
                     Log.d("error ", "error occured :::::" + error);
                 }
             });
-            queue.add(jsonArrayRequest);
+            queue.add(jsonObjectRequest);
     }
 
     private String getApi() {

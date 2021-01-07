@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.feedback.FeedbackFragment">
+
+    <TextView
+        android:id="@+id/header_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/activity_horizontal_margin"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:text="Your feedback is most valuable, please give your feedback!!" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextName"
+        android:layout_below="@+id/header_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/nav_header_vertical_spacing">
+
+        <EditText
+            android:id="@+id/name_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/black"
+            android:hint="NAME"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:singleLine="true"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextEmail"
+        android:layout_below="@+id/editTextName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/nav_header_vertical_spacing">
+
+        <EditText
+            android:id="@+id/email_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/black"
+            android:hint="EMAIL"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:singleLine="true"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextPhoneNumber"
+        android:layout_below="@+id/editTextEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/nav_header_vertical_spacing">
+
+        <EditText
+            android:id="@+id/phno_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="PHONE NUMBER"
+            android:inputType = "phone"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColorHint="@color/black" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextfeedback"
+        android:layout_below="@+id/editTextPhoneNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/nav_header_vertical_spacing">
+
+        <EditText
+            android:id="@+id/content_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Enter your valuable feedback here"
+            android:inputType = "textEmailAddress"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColorHint="@color/black" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btn_syllabus_go"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:enabled="false"
+        android:text="Submit Feedback"/>
+
+    <TextView
+        android:id="@+id/errorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:textColor="@color/red"
+        android:layout_above="@id/btn_syllabus_go"/>
+
+</RelativeLayout>

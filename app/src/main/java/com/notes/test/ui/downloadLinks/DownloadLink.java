@@ -44,11 +44,13 @@ public class DownloadLink extends AppCompatActivity {
         webView1 = findViewById(R.id.webView1);
         webView1.setVisibility(View.GONE);
 
-        int REQUEST_CODE=1;
+
+//This code is to get write external storage permission from user
+        /*int REQUEST_CODE=1;
 
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
-        }, REQUEST_CODE);
+        }, REQUEST_CODE);*/
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);

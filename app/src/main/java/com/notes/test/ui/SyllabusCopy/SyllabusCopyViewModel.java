@@ -1,5 +1,6 @@
 package com.notes.test.ui.SyllabusCopy;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -19,6 +21,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.notes.test.MainActivity;
 import com.notes.test.ui.MySingleton;
 import com.notes.test.ui.RecyclerView.MyListData;
 import com.notes.test.ui.notes.GalleryFragment;
@@ -65,7 +68,7 @@ public class SyllabusCopyViewModel extends ViewModel {
                     @Override
                     public void onResponse(JSONArray response) {
                         getDownloadableUrl(response);
-                        downloadfile(getMediaUrl(urlSyllabusCopy), titleSyllabusCopy, context);
+                        openInBrowser(getMediaUrl(urlSyllabusCopy), titleSyllabusCopy, context);
                     }
 
 // Method will append base url to media url
@@ -116,20 +119,13 @@ public class SyllabusCopyViewModel extends ViewModel {
         return stringWithoutSpaces;
     }
 
-// This method will download the pdf file
-    public static void downloadfile(String url, String title, Context context) {
-        DownloadManager.Request request=new DownloadManager.Request(Uri.parse(url));
-        String tempTitle=title.replace("","");
-        request.setTitle(tempTitle);
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB){
-            request.allowScanningByMediaScanner();
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        }
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,tempTitle+".pdf");
-        DownloadManager downloadManager= (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        request.setMimeType("application/pdf");
-        request.allowScanningByMediaScanner();
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-        downloadManager.enqueue(request);
+
+    // This method will open pdf in external browser
+    public static void openInBrowser(String url, String title, Context context){
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        context.startActivity(browserIntent);
+
     }
+
+
 }
