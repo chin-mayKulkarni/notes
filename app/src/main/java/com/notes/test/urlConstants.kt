@@ -17,6 +17,7 @@ interface urlConstants {
         const val URL_GET_SUBJECT_BASE = "https://vtu.pythonanywhere.com/apiv1/Subjects"
         const val URL_GET_QP_BASE = "https://vtu.pythonanywhere.com/apiv1/Subjects"
         const val URL_DEVICE_ID = "https://vtu.pythonanywhere.com/apiv1/InitialLoad"
+        const val URL_FEEDBACK = "https://vtu.pythonanywhere.com/apiv1/FeedBack"
 
     }
 }

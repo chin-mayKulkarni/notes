@@ -17,7 +17,6 @@
         android:layout_height="match_parent"
         android:fillViewport="true">
 
-
     <FrameLayout
         android:id="@+id/activity_layout"
         android:layout_below="@+id/view_space"
@@ -327,7 +326,7 @@
 
                     </LinearLayout>
 
-                    <!--<LinearLayout
+                    <LinearLayout
                         android:id="@+id/ButtonWhatsapp"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -335,24 +334,37 @@
                         android:layout_weight="1"
                         android:background="?selectableItemBackgroundBorderless"
                         android:clickable="true"
-                        android:contentDescription="des"
+                        android:contentDescription="description"
                         android:focusable="true"
                         android:gravity="center_horizontal|top"
-                        android:orientation="vertical"
-                        android:padding="8dp">
+                        android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/iconfb"
+                            android:layout_width="65dp"
+                            android:layout_height="65dp"
+                            android:layout_marginTop="5dp"
+                            android:src="@drawable/iconwhatsapp"
                             android:importantForAccessibility="no"/>
 
-                    </LinearLayout>-->
+                    </LinearLayout>
 
                 </LinearLayout>
 
 
             </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/feedbackText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Feedback"
+                android:textSize="@dimen/activity_horizontal_margin"
+                android:layout_below="@+id/fb_card"
+                android:textColor="@color/black"
+                android:clickable="true"
+                android:layout_centerHorizontal="true"
+                android:focusable="true" />
+
 
 
 
