@@ -16,7 +16,7 @@ android {
         applicationId "com.notes.test"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 3
+        versionCode 4
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -52,6 +52,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0"
     implementation 'com.google.android.material:material:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "com.android.support:support-core-utils:28.0.0"
 
 }
 repositories {

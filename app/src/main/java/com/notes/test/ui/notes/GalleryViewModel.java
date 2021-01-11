@@ -46,7 +46,7 @@ public class GalleryViewModel extends ViewModel {
         final String[] jsonArray = new String[1];
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
-                /*urlConstants.URL_TEST */getApi(sem, branch, sub, context),
+                getApi(sem, branch, sub, context),
                 (JSONArray) null,
                 new Response.Listener<JSONArray>() {
                     @Override

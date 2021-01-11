@@ -185,23 +185,11 @@ public class GalleryFragment extends Fragment {
 
 //To show loading spinner
     public void showProgressBar(View root){
-        //final ProgressBar simpleProgressBar = root.findViewById(R.id.simpleProgressBar);
-       // simpleProgressBar.setVisibility(View.VISIBLE);
-        final FrameLayout fl = root.findViewById(R.id.loading_overlay);
-
         root.findViewById(R.id.loading_overlay).setVisibility(View.VISIBLE);
         root.findViewById(R.id.loading_overlay).sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
         root.findViewById(R.id.loading_overlay).requestFocus();
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
         root.setClickable(false);
-/*        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                fl.setVisibility(View.GONE);
-                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            }
-        }, 5000);*/
     }
 
     public void hideProgressBar(View root){
