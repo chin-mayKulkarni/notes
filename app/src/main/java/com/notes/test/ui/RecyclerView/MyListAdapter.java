@@ -1,6 +1,7 @@
 package com.notes.test.ui.RecyclerView;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,18 @@ import android.widget.Toast;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.notes.test.R;
+import com.notes.test.ui.MySingleton;
 import com.notes.test.ui.downloadLinks.DownloadLink;
 import com.notes.test.urlConstants;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -42,6 +51,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
     public void onBindViewHolder(final ViewHolder holder, final int position) {
        // final MyListData myListData = listdata[position];
         holder.textView.setText(myListMainData.get(position).getDescription());
+        holder.numberOfDownloads.setText(myListMainData.get(position).getNumberOfDownloads());
         holder.textViewHeader.setText(myListMainData.get(position).getHeader());
 
         Picasso.get().load(getFinalDownloadableLink(myListMainData.get(position).getPreviewImg())).into(holder.image_notes);
@@ -56,7 +66,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
                 String title = "pdfName";
 
                // DownloadLink.downloadfile(url1,title,view.getContext());
-                DownloadLink.openInBrowser(getFinalDownloadableLink(myListMainData.get(position).getDownloadableLink()),title,view.getContext());
+                DownloadLink.openInBrowser(getFinalDownloadableLink(myListMainData.get(position).getDownloadableLink()),title,view.getContext(), myListMainData.get(position).getId(),myListMainData.get(position).getType());
                 Toast.makeText(view.getContext(),"click on item: "+myListMainData.get(position).getHeader(),Toast.LENGTH_LONG).show();
             }
 
@@ -90,13 +100,14 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewHeader;
-        public TextView textView;
+        public TextView textView, numberOfDownloads, id;
         public ImageView image_notes;
         public CardView relativeLayout;
         public ViewHolder(View itemView) {
             super(itemView);
             this.textViewHeader = (TextView) itemView.findViewById(R.id.textViewHeader);
             this.textView = (TextView) itemView.findViewById(R.id.textView);
+            this.numberOfDownloads = (TextView) itemView.findViewById(R.id.numberOfDownloads);
             this.image_notes = itemView.findViewById(R.id.image_notes);
             relativeLayout = (CardView) itemView.findViewById(R.id.relativeLayout);
         }

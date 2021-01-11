@@ -1,5 +1,6 @@
-package com.notes.test.ui.feedback;
+package com.notes.test.ui.Fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,7 +29,6 @@ import com.android.volley.toolbox.Volley;
 import com.notes.test.R;
 import com.notes.test.urlConstants;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -238,11 +238,12 @@ public class FeedbackFragment extends Fragment {
             submit.setEnabled(false);
         } else {
             submit.setEnabled(true);
+            submit.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
         }
     }
 
     public String getDatFromSharedpref(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("FirstSharedpref", MODE_APPEND);
+        @SuppressLint("WrongConstant") SharedPreferences sharedPreferences = context.getSharedPreferences("FirstSharedpref", MODE_APPEND);
         String deviceID = sharedPreferences.getString("DeviceID", null);
         //String version = sharedPreferences.getString("Version", " ");
         Log.d("fromSharedpred", deviceID);

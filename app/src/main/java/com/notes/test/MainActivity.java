@@ -7,13 +7,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.accessibility.AccessibilityEvent;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,25 +19,17 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.android.material.navigation.NavigationView;
 import com.notes.test.ui.MySingleton;
-import com.notes.test.ui.feedback.FeedbackFragment;
 import com.notes.test.ui.fragmentHolder.FragmentHolder;
-import com.notes.test.ui.notes.GalleryFragment;
 
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -68,10 +57,43 @@ public class MainActivity extends AppCompatActivity {
         CardView qpNotes = findViewById(R.id.qp_card);
         LinearLayout facebook = findViewById(R.id.ButtonFacebook);
         CardView syllabuscopy = findViewById(R.id.sc_card);
+        CardView supportUs = findViewById(R.id.support_card);
         LinearLayout instagram = findViewById(R.id.ButtonInstagram);
         LinearLayout telegram = findViewById(R.id.buttonTelegram);
         LinearLayout whatsapp = findViewById(R.id.ButtonWhatsapp);
         TextView feedback = findViewById(R.id.feedbackText);
+        TextView aboutUs = findViewById(R.id.aboutText);
+        ImageView upload_card = findViewById(R.id.donate_icon);
+
+        supportUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(urlConstants.URL_BUY_COFFEE)));
+            }
+        });
+
+        aboutUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,
+                        FragmentHolder.class);
+                intent.putExtra("Header", "About Us");
+                intent.putExtra("fragmentName", "about");
+                MainActivity.this.startActivity(intent);
+            }
+        });
+
+        upload_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,
+                        FragmentHolder.class);
+                intent.putExtra("Header", "Donate Notes");
+                intent.putExtra("fragmentName", "DonateNotes");
+                MainActivity.this.startActivity(intent);
+            }
+        });
 
         feedback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,18 +130,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                /*Intent intentWhatsapp = new Intent(Intent.ACTION_VIEW);
-                String url = "https://chat.whatsapp.com/EDkwCsWCErIF5AWNuVmYXJ";
-                intentWhatsapp.setData(Uri.parse(url));
-                intentWhatsapp.setPackage("com.whatsapp");
-                startActivity(intentWhatsapp);*/
-
-                /*Intent intent = new Intent(MainActivity.this,
-                        FragmentHolder.class);
-                intent.putExtra("Header", "About us");
-                intent.putExtra("fragmentName", "AboutUs");
-                MainActivity.this.startActivity(intent);*/
-
                 Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
                 String facebookUrl = getFacebookPageURL(getApplication());
                 facebookIntent.setData(Uri.parse(facebookUrl));
@@ -133,7 +143,12 @@ public class MainActivity extends AppCompatActivity {
                 String url = "https://chat.whatsapp.com/EDkwCsWCErIF5AWNuVmYXJ";
                 intentWhatsapp.setData(Uri.parse(url));
                 intentWhatsapp.setPackage("com.whatsapp");
-                startActivity(intentWhatsapp);
+                try {
+                    startActivity(intentWhatsapp);
+                } catch (ActivityNotFoundException e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(url)));
+                }
             }
         });
         telegram.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +158,12 @@ public class MainActivity extends AppCompatActivity {
                 String url = "https://t.me/joinchat/FzuqiL62dreK2Pkx";
                 intentWhatsapp.setData(Uri.parse(url));
                 intentWhatsapp.setPackage("org.telegram.messenger");
-                startActivity(intentWhatsapp);
+                try {
+                    startActivity(intentWhatsapp);
+                } catch (ActivityNotFoundException e) {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(url)));
+                }
             }
         });
         syllabuscopy.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("Header", "Syllabus Copy");
                 intent.putExtra("fragmentName", "Syllabus Copy");
                 MainActivity.this.startActivity(intent);
+
             }
         });
         instagram.setOnClickListener(new View.OnClickListener() {

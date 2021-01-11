@@ -110,4 +110,8 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="click_on_below_links_to_download">Click on below links to download</string>
+    <string name="label_divider">|</string>
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
