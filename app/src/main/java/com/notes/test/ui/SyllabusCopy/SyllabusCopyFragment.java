@@ -29,6 +29,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.notes.test.R;
 import com.notes.test.ui.downloadLinks.DownloadLink;
@@ -46,6 +51,8 @@ public class SyllabusCopyFragment extends Fragment {
     Button btn_go;
     String branchSel;
     int branchPos = 0;
+    private AdView mAdView;
+
 
     private SyllabusCopyViewModel syllabusCopyViewModel;
 
@@ -65,6 +72,16 @@ public class SyllabusCopyFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
 
         showProgressBar(root);
+        MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+
+            }
+        });
+
+        mAdView = root.findViewById(R.id.adView5);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         jsonBranch.add("BRANCH");
         getBranchDetailsForNotes(getContext(), root);
@@ -96,7 +113,6 @@ public class SyllabusCopyFragment extends Fragment {
                     btn_go.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                     btn_go.setTextColor(getResources().getColor(R.color.white));
                 }
-                Toast.makeText(getContext(), "onItemSelected"+ jsonBranch.get(pos), Toast.LENGTH_LONG).show();
                 branchSel = jsonBranch.get(pos);
             }
             public void onNothingSelected(AdapterView<?> parent) {

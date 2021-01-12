@@ -30,11 +30,17 @@
             android:animateLayoutChanges="true"
             android:orientation="vertical">
 
-
-            <View
-                android:id="@+id/view_space"
+            <com.google.android.gms.ads.AdView
+                xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/adView"
                 android:layout_width="match_parent"
-                android:layout_height="20dp" />
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                ads:adSize="BANNER"
+                ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+            </com.google.android.gms.ads.AdView>
+
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -182,13 +188,24 @@
                 android:layout_below="@+id/sc_card"
                 android:layout_weight="1" />
 
+            <com.google.android.gms.ads.AdView
+                xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/adView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                ads:adSize="BANNER"
+                ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+            </com.google.android.gms.ads.AdView>
+
             <TextView
                 android:id="@+id/useful_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/view_ui"
+                android:layout_below="@+id/adView2"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="20sp"
+                android:layout_marginTop="10sp"
                 android:text="Useful links"
                 android:textAllCaps="true"
                 android:textColor="@color/colorBlue"

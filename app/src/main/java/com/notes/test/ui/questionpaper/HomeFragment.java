@@ -36,6 +36,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.notes.test.MainActivity;
 import com.notes.test.R;
@@ -57,6 +62,8 @@ public class HomeFragment extends Fragment {
     Button btn_go;
     public List<String> jsonBranch = new ArrayList<String>();
     String branchSel, subSel, semSel;
+    private AdView mAdView;
+
 
     public HomeFragment() {
     }
@@ -99,6 +106,17 @@ public class HomeFragment extends Fragment {
 
 //Invokes progress bar
         showProgressBar(root);
+
+        MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+
+            }
+        });
+
+        mAdView = root.findViewById(R.id.adView4);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         List<String> spinnerArray = new ArrayList<String>();
         spinnerArray.add("Branch");
@@ -164,7 +182,6 @@ public class HomeFragment extends Fragment {
                     dropdown2.setVisibility(View.GONE);
                     dropdown3.setVisibility(View.GONE);
                 }
-                Toast.makeText(getContext(), "onItemSelected" + jsonBranch.get(pos), Toast.LENGTH_LONG).show();
                 branchSel = jsonBranch.get(pos);
 
 //                ((TextView) view).setTextColor(Color.RED);
