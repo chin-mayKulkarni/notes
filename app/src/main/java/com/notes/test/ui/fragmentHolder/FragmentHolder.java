@@ -4,8 +4,15 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -34,9 +41,11 @@ public class FragmentHolder extends AppCompatActivity {
             actionBar.setTitle(header);
             actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimaryDark)));
         }
-        displayFragmentInActivity(fragmentName);
+         displayFragmentInActivity(fragmentName);
 
     }
+
+
 
     private void displayFragmentInActivity(String fragmentName) {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -60,6 +69,7 @@ public class FragmentHolder extends AppCompatActivity {
             fragmentManager.beginTransaction().replace(R.id.fragment_layout , fragmentSent, "tag").commit();
         }
     }
+
 
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()) {

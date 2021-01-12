@@ -96,7 +96,7 @@ public class DonateFragment extends Fragment {
                 validateInput();
                 if (errortext.getVisibility() != View.VISIBLE){
                     callOTPService();
-                    dialogueToReadOTP();
+                    //dialogueToReadOTP();
 
                 }
             }
@@ -128,9 +128,16 @@ public class DonateFragment extends Fragment {
                     public void onResponse(JSONObject response) {
                         Log.d("contactusresponse", response.toString());
                        // dialogueToReadOTP();
-                        if (response.toString().contains("O.K")){
+                        if (response.toString().contains("no need of otp validation")){
                             clearAllfields();
-                            Toast.makeText(getContext(),"Your Information has been submitted successfully",Toast.LENGTH_LONG).show();
+                            dialogueSuccess();
+                           // Toast.makeText(getContext(),"Your Information has been submitted successfully",Toast.LENGTH_LONG).show();
+                           // getActivity().onBackPressed();
+                        }
+                        if (response.toString().contains("OTP has been shared")){
+                            //clearAllfields();
+                            dialogueToReadOTP();
+                            Toast.makeText(getContext(),"OTP has been shared",Toast.LENGTH_LONG).show();
                             //getActivity().onBackPressed();
                         }
 
@@ -184,25 +191,64 @@ public class DonateFragment extends Fragment {
                 })
                 .create();
         dialog.show();
-
-
+    }
+    private void dialogueForWrongOTP() {
+        final EditText otpEditText = new EditText(getContext());
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle("Enter OTP")
+                .setMessage("You have entered wrong OTP, Please enter again!!!")
+                .setView(otpEditText)
+                .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String OTP = String.valueOf(otpEditText.getText());
+                        sendOTPforVerification(OTP);
+                        Log.d("OTP", "OTP :" + OTP);
+                    }
+                })
+                .create();
+        dialog.show();
+    }
+    private void dialogueSuccess() {
+        //final EditText otpEditText = new EditText(getContext());
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle("Success")
+                .setMessage("Thank you for reaching out to us, we'll contact you soon!!")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().onBackPressed();
+                        Log.d("Dialogue", "Success Dialogue :");
+                    }
+                })
+                .create();
+        dialog.show();
     }
 
     private void sendOTPforVerification(String otp) {
         final RequestQueue queue;
         queue = MySingleton.getInstance(getContext()).getRequestQueue();
-        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 urlConstants.URL_VALIDATE_OTP + "/" + otp + "/" + getDeviceId(getContext()),
-                (JSONArray) null,
-                new Response.Listener<JSONArray>() {
+                (JSONObject) null,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(JSONObject response) {
+
+                        //TODO : if we get positive response show happy dialogue.
+                        if (response.toString().contains("O.K")){
+                            dialogueSuccess();
+                        }
+
                         Log.d("OTPResponse", "OTP" + response.toString());
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(),"Error while retrieving T&C",Toast.LENGTH_LONG).show();
+                if (error.toString().contains("AuthFailureError")){
+                    dialogueForWrongOTP();
+                }
+                Toast.makeText(getContext(),"Error while submitting OTP",Toast.LENGTH_LONG).show();
                 Log.d("error ", "error occured :::::" + error);
             }
         });

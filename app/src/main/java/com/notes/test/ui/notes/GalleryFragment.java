@@ -1,9 +1,14 @@
 package com.notes.test.ui.notes;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,9 +36,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.notes.test.R;
 import com.notes.test.ui.downloadLinks.DownloadLink;
+import com.notes.test.ui.questionpaper.HomeFragment;
 import com.notes.test.urlConstants;
 
 import org.json.JSONArray;
@@ -52,6 +63,8 @@ public class GalleryFragment extends Fragment {
     public List<String> jsonBranch = new ArrayList<String>();
     String branchSel, subSel, semSel;
     private GalleryViewModel galleryViewModel;
+    private AdView mAdView;
+
 
 
     public GalleryFragment() { }
@@ -61,8 +74,45 @@ public class GalleryFragment extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_gallery, container, false);
         galleryViewModel = ViewModelProviders.of(this).get(GalleryViewModel.class);
 
+
+
+
+
+        final TextView textView = root.findViewById(R.id.text_gallery);
+        galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                textView.setText(s);
+                textView.setVisibility(View.GONE);
+            }
+        });
+        return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isInternetConnected()) {
+            processWithInternet(getView());
+        } else showCustomDialogue();
+    }
+
+
+    private void processWithInternet(final View root){
+
 //Invokes progress bar for 5 seconds and disappears
         showProgressBar(root);
+
+        MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+
+            }
+        });
+
+        mAdView = root.findViewById(R.id.adView3);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         List<String> spinnerArray =  new ArrayList<String>();
         spinnerArray.add("Branch");
@@ -71,7 +121,9 @@ public class GalleryFragment extends Fragment {
         jsonBranch.add("BRANCH");
         jsonSub.add("SUBJECT");
 
-        getBranchDetailsForNotes(getContext(), root);
+        if (!isInternetConnected()){
+            showCustomDialogue();
+        }else  getBranchDetailsForNotes(getContext(), root);
         Spinner dropdown = root.findViewById(R.id.branch_spinner);
         final Spinner dropdown2 = root.findViewById(R.id.sem_spinner);
         final Spinner dropdown3 = root.findViewById(R.id.sub_spinner);
@@ -84,7 +136,10 @@ public class GalleryFragment extends Fragment {
             public void onClick(View v) {
                 Snackbar.make(v, "Clicked on Go", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                galleryViewModel.getJsonResponse(getContext(), semSel, branchSel,subSel);
+                if (!isInternetConnected()){
+                    showCustomDialogue();
+                }
+                else galleryViewModel.getJsonResponse(getContext(), semSel, branchSel,subSel);
 
             }
         });
@@ -108,15 +163,22 @@ public class GalleryFragment extends Fragment {
                 branchPos = pos;
                 //showProgressBar(root);
                 if (jsonBranch.get(pos).equals("P cycle") || jsonBranch.get(pos).equals("C cycle")) {
-                    getSubjectForNotes(getContext(), "1st SEMESTER", jsonBranch.get(branchPos), root);
-                    ArrayAdapter<String> adapter = adapterFunList(jsonSub);
-                    dropdown2.setVisibility(View.GONE);
-                    dropdown3.setAdapter(adapter);
-                    dropdown3.setSelection(0);
-                    showProgressBar(root);
-                    semSel = "1st SEMESTER";
-                    dropdown3.setVisibility(View.VISIBLE);
+                    if (!isInternetConnected()){
+                        showCustomDialogue();
+                    }else {
+                        getSubjectForNotes(getContext(), "1st SEMESTER", jsonBranch.get(branchPos), root);
+                        ArrayAdapter<String> adapter = adapterFunList(jsonSub);
+                        dropdown2.setVisibility(View.GONE);
+                        dropdown3.setAdapter(adapter);
+                        dropdown3.setSelection(0);
+                        showProgressBar(root);
+                        semSel = "1st SEMESTER";
+                        dropdown3.setVisibility(View.VISIBLE);
+                    }
                 } else if (jsonBranch.get(pos) != "BRANCH") {
+                    if (!isInternetConnected()){
+                        showCustomDialogue();
+                    }else{
                         dropdown2.setVisibility(View.VISIBLE);
                         if (dropdown3.getVisibility() == View.VISIBLE) {
                             dropdown3.setVisibility(View.GONE);
@@ -124,11 +186,11 @@ public class GalleryFragment extends Fragment {
                             dropdown2.setAdapter(adapter);
                             btn_go.setEnabled(false);
                         }
-                    } else {
-                        dropdown2.setVisibility(View.GONE);
-                        dropdown3.setVisibility(View.GONE);
                     }
-                Toast.makeText(getContext(), "onItemSelected"+ jsonBranch.get(pos), Toast.LENGTH_LONG).show();
+                } else {
+                    dropdown2.setVisibility(View.GONE);
+                    dropdown3.setVisibility(View.GONE);
+                }
                 branchSel = jsonBranch.get(pos);
 
 //                ((TextView) view).setTextColor(Color.RED);
@@ -144,12 +206,16 @@ public class GalleryFragment extends Fragment {
                 if (jsonSem.get(pos) != "SEMESTER"){
 
                     dropdown3.setVisibility(View.VISIBLE);
-                    getSubjectForNotes(getContext(), jsonSem.get(pos), jsonBranch.get(branchPos), root);
+                    if (!isInternetConnected()){
+                        showCustomDialogue();
+                    } else {
+                        getSubjectForNotes(getContext(), jsonSem.get(pos), jsonBranch.get(branchPos), root);
+                        ArrayAdapter<String> adapter  = adapterFunList(jsonSub);
+                        dropdown3.setAdapter(adapter);
+                        dropdown3.setSelection(0);
+                        showProgressBar(root);
+                    }
 
-                    ArrayAdapter<String> adapter  = adapterFunList(jsonSub);
-                    dropdown3.setAdapter(adapter);
-                    dropdown3.setSelection(0);
-                    showProgressBar(root);
                 } else dropdown3.setVisibility(View.GONE);
                 semSel = jsonSem.get(pos);
             }
@@ -171,19 +237,32 @@ public class GalleryFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
-        final TextView textView = root.findViewById(R.id.text_gallery);
-        galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-                textView.setVisibility(View.GONE);
-            }
-        });
-        return root;
     }
 
-//To show loading spinner
+    private void showCustomDialogue() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Please connect to internet to Proceed")
+                .setCancelable(false)
+                .setTitle("No Internet")
+                .setIcon(R.drawable.nointernet)
+                .setPositiveButton("Connect", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().onBackPressed();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+    //To show loading spinner
     public void showProgressBar(View root){
         root.findViewById(R.id.loading_overlay).setVisibility(View.VISIBLE);
         root.findViewById(R.id.loading_overlay).sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
@@ -331,6 +410,17 @@ public class GalleryFragment extends Fragment {
 
         /*Snackbar.make(relativeLayout, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();*/
+
+    }
+
+    private boolean isInternetConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiConnection = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConnection = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if ((wifiConnection != null && wifiConnection.isConnected()) || (mobileConnection != null && mobileConnection.isConnected())) {
+            return true;
+        } else return false;
 
     }
 }

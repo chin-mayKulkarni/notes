@@ -36,6 +36,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.notes.test.MainActivity;
 import com.notes.test.R;
@@ -57,6 +62,8 @@ public class HomeFragment extends Fragment {
     Button btn_go;
     public List<String> jsonBranch = new ArrayList<String>();
     String branchSel, subSel, semSel;
+    private AdView mAdView;
+
 
     public HomeFragment() {
     }
@@ -69,12 +76,6 @@ public class HomeFragment extends Fragment {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         final View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-
-
-        if (!isInternetConnected(this)) {
-            showCustomDialogue();
-        }
-
         return root;
     }
 
@@ -83,7 +84,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (isInternetConnected(this)) {
+        if (isInternetConnected()) {
             processWithInternet(getView());
         } else showCustomDialogue();
     }
@@ -96,9 +97,18 @@ public class HomeFragment extends Fragment {
 
 
     private void processWithInternet(final View root) {
-
 //Invokes progress bar
         showProgressBar(root);
+        MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+
+            }
+        });
+
+        mAdView = root.findViewById(R.id.adView4);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         List<String> spinnerArray = new ArrayList<String>();
         spinnerArray.add("Branch");
@@ -107,7 +117,9 @@ public class HomeFragment extends Fragment {
         jsonBranch.add("BRANCH");
         jsonSub.add("SUBJECT");
 
-        getBranchDetailsForNotes(getContext(), root);
+        if (!isInternetConnected()){
+            showCustomDialogue();
+        }else getBranchDetailsForNotes(getContext(), root);
         Spinner dropdown = root.findViewById(R.id.branch_spinner_qp);
         final Spinner dropdown2 = root.findViewById(R.id.sem_spinner_qp);
         final Spinner dropdown3 = root.findViewById(R.id.sub_spinner_qp);
@@ -144,15 +156,22 @@ public class HomeFragment extends Fragment {
                 branchPos = pos;
                 // showProgressBar(root);
                 if (jsonBranch.get(pos).equals("P cycle") || jsonBranch.get(pos).equals("C cycle")) {
-                    getSubjectForNotes(getContext(), "1st SEMESTER", jsonBranch.get(branchPos), root);
-                    ArrayAdapter<String> adapter = adapterFunList(jsonSub);
-                    dropdown2.setVisibility(View.GONE);
-                    dropdown3.setAdapter(adapter);
-                    dropdown3.setSelection(0);
-                    showProgressBar(root);
-                    semSel = "1st SEMESTER";
-                    dropdown3.setVisibility(View.VISIBLE);
+                    if (!isInternetConnected()){
+                        showCustomDialogue();
+                    }else {
+                        getSubjectForNotes(getContext(), "1st SEMESTER", jsonBranch.get(branchPos), root);
+                        ArrayAdapter<String> adapter = adapterFunList(jsonSub);
+                        dropdown2.setVisibility(View.GONE);
+                        dropdown3.setAdapter(adapter);
+                        dropdown3.setSelection(0);
+                        showProgressBar(root);
+                        semSel = "1st SEMESTER";
+                        dropdown3.setVisibility(View.VISIBLE);
+                    }
                 } else if (jsonBranch.get(pos) != "BRANCH") {
+                    if (!isInternetConnected()){
+                        showCustomDialogue();
+                    }else{
                     dropdown2.setVisibility(View.VISIBLE);
                     if (dropdown3.getVisibility() == View.VISIBLE) {
                         dropdown3.setVisibility(View.GONE);
@@ -160,11 +179,11 @@ public class HomeFragment extends Fragment {
                         dropdown2.setAdapter(adapter);
                         btn_go.setEnabled(false);
                     }
+                    }
                 } else {
                     dropdown2.setVisibility(View.GONE);
                     dropdown3.setVisibility(View.GONE);
                 }
-                Toast.makeText(getContext(), "onItemSelected" + jsonBranch.get(pos), Toast.LENGTH_LONG).show();
                 branchSel = jsonBranch.get(pos);
 
 //                ((TextView) view).setTextColor(Color.RED);
@@ -181,12 +200,16 @@ public class HomeFragment extends Fragment {
                 if (jsonSem.get(pos) != "SEMESTER") {
 
                     dropdown3.setVisibility(View.VISIBLE);
-                    getSubjectForNotes(getContext(), jsonSem.get(pos), jsonBranch.get(branchPos), root);
+                    if (!isInternetConnected()){
+                        showCustomDialogue();
+                    } else {
+                        getSubjectForNotes(getContext(), jsonSem.get(pos), jsonBranch.get(branchPos), root);
+                        ArrayAdapter<String> adapter = adapterFunList(jsonSub);
+                        dropdown3.setAdapter(adapter);
+                        dropdown3.setSelection(0);
+                        showProgressBar(root);
+                    }
 
-                    ArrayAdapter<String> adapter = adapterFunList(jsonSub);
-                    dropdown3.setAdapter(adapter);
-                    dropdown3.setSelection(0);
-                    showProgressBar(root);
                 } else dropdown3.setVisibility(View.GONE);
                 semSel = jsonSem.get(pos);
             }
@@ -213,7 +236,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private boolean isInternetConnected(HomeFragment homeFragment) {
+    private boolean isInternetConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo wifiConnection = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         NetworkInfo mobileConnection = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
@@ -225,10 +248,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void showCustomDialogue() {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Please connect to internet to Proceed")
                 .setCancelable(false)
+                .setTitle("No Internet")
+                .setIcon(R.drawable.nointernet)
                 .setPositiveButton("Connect", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -238,11 +262,12 @@ public class HomeFragment extends Fragment {
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // startActivity(new Intent(getContext(), MainActivity.class));
+                        getActivity().onBackPressed();
                     }
                 });
         AlertDialog alert = builder.create();
         alert.show();
+
     }
 
     //To show loading spinner
