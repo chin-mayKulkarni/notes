@@ -74,6 +74,32 @@ public class GalleryFragment extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_gallery, container, false);
         galleryViewModel = ViewModelProviders.of(this).get(GalleryViewModel.class);
 
+
+
+
+
+        final TextView textView = root.findViewById(R.id.text_gallery);
+        galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                textView.setText(s);
+                textView.setVisibility(View.GONE);
+            }
+        });
+        return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isInternetConnected()) {
+            processWithInternet(getView());
+        } else showCustomDialogue();
+    }
+
+
+    private void processWithInternet(final View root){
+
 //Invokes progress bar for 5 seconds and disappears
         showProgressBar(root);
 
@@ -110,7 +136,10 @@ public class GalleryFragment extends Fragment {
             public void onClick(View v) {
                 Snackbar.make(v, "Clicked on Go", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                galleryViewModel.getJsonResponse(getContext(), semSel, branchSel,subSel);
+                if (!isInternetConnected()){
+                    showCustomDialogue();
+                }
+                else galleryViewModel.getJsonResponse(getContext(), semSel, branchSel,subSel);
 
             }
         });
@@ -158,10 +187,10 @@ public class GalleryFragment extends Fragment {
                             btn_go.setEnabled(false);
                         }
                     }
-                    } else {
-                        dropdown2.setVisibility(View.GONE);
-                        dropdown3.setVisibility(View.GONE);
-                    }
+                } else {
+                    dropdown2.setVisibility(View.GONE);
+                    dropdown3.setVisibility(View.GONE);
+                }
                 branchSel = jsonBranch.get(pos);
 
 //                ((TextView) view).setTextColor(Color.RED);
@@ -177,12 +206,16 @@ public class GalleryFragment extends Fragment {
                 if (jsonSem.get(pos) != "SEMESTER"){
 
                     dropdown3.setVisibility(View.VISIBLE);
-                    getSubjectForNotes(getContext(), jsonSem.get(pos), jsonBranch.get(branchPos), root);
+                    if (!isInternetConnected()){
+                        showCustomDialogue();
+                    } else {
+                        getSubjectForNotes(getContext(), jsonSem.get(pos), jsonBranch.get(branchPos), root);
+                        ArrayAdapter<String> adapter  = adapterFunList(jsonSub);
+                        dropdown3.setAdapter(adapter);
+                        dropdown3.setSelection(0);
+                        showProgressBar(root);
+                    }
 
-                    ArrayAdapter<String> adapter  = adapterFunList(jsonSub);
-                    dropdown3.setAdapter(adapter);
-                    dropdown3.setSelection(0);
-                    showProgressBar(root);
                 } else dropdown3.setVisibility(View.GONE);
                 semSel = jsonSem.get(pos);
             }
@@ -204,16 +237,6 @@ public class GalleryFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
-        final TextView textView = root.findViewById(R.id.text_gallery);
-        galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-                textView.setVisibility(View.GONE);
-            }
-        });
-        return root;
     }
 
     private void showCustomDialogue() {

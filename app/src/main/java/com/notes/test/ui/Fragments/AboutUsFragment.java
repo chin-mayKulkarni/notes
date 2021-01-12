@@ -1,9 +1,13 @@
 package com.notes.test.ui.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -12,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,6 +90,7 @@ public class AboutUsFragment extends Fragment {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -98,8 +104,15 @@ public class AboutUsFragment extends Fragment {
         privacy_card = root.findViewById(R.id.privacy_card);
         terms_card = root.findViewById(R.id.terms_card);
 
-        showProgressBar(root);
-        getAboutApi(root);
+           if (isInternetConnected()){
+               showProgressBar(root);
+               getAboutApi(root);
+           } else {
+               showCustomDialogue();
+           }
+
+
+
 
         about_card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +150,8 @@ public class AboutUsFragment extends Fragment {
 
         return root;
     }
+
+
 
 
     //To show loading spinner
@@ -200,5 +215,41 @@ public class AboutUsFragment extends Fragment {
         String deviceID = sharedPreferences.getString("DeviceID", null);
         Log.d("fromSharedpred", deviceID);
         return deviceID;
+    }
+
+
+    private boolean isInternetConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiConnection = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConnection = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if ((wifiConnection != null && wifiConnection.isConnected()) || (mobileConnection != null && mobileConnection.isConnected())) {
+            return true;
+        } else return false;
+
+    }
+
+
+    private void showCustomDialogue() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Please connect to internet to Proceed")
+                .setCancelable(false)
+                .setTitle("No Internet")
+                .setIcon(R.drawable.nointernet)
+                .setPositiveButton("Connect", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().onBackPressed();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
     }
 }

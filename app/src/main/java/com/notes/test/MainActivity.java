@@ -1,12 +1,17 @@
 package com.notes.test;
 
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -54,7 +59,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
-//Device id generation
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isInternetConnected()) {
+            processWithInternet();
+        } else showCustomDialogue();
+    }
+
+    private void processWithInternet(){
+        //Device id generation
         if (getDatFromSharedpref() ==null){
             String dev = generateDeviceId();
         }
@@ -98,33 +115,41 @@ public class MainActivity extends AppCompatActivity {
         aboutUs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,
-                        FragmentHolder.class);
-                intent.putExtra("Header", "About Us");
-                intent.putExtra("fragmentName", "about");
-                MainActivity.this.startActivity(intent);
+                if (isInternetConnected()){
+                    Intent intent = new Intent(MainActivity.this,
+                            FragmentHolder.class);
+                    intent.putExtra("Header", "About Us");
+                    intent.putExtra("fragmentName", "about");
+                    MainActivity.this.startActivity(intent);
+                } else showCustomDialogue();
+
             }
         });
 
         upload_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,
-                        FragmentHolder.class);
-                intent.putExtra("Header", "Donate Notes");
-                intent.putExtra("fragmentName", "DonateNotes");
-                MainActivity.this.startActivity(intent);
+                if (isInternetConnected()) {
+                    Intent intent = new Intent(MainActivity.this,
+                            FragmentHolder.class);
+                    intent.putExtra("Header", "Donate Notes");
+                    intent.putExtra("fragmentName", "DonateNotes");
+                    MainActivity.this.startActivity(intent);
+                }else showCustomDialogue();
             }
         });
 
         feedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,
-                        FragmentHolder.class);
-                intent.putExtra("Header", "Feedback");
-                intent.putExtra("fragmentName", "feedback");
-                MainActivity.this.startActivity(intent);
+                if (isInternetConnected()) {
+                    Intent intent = new Intent(MainActivity.this,
+                            FragmentHolder.class);
+                    intent.putExtra("Header", "Feedback");
+                    intent.putExtra("fragmentName", "feedback");
+                    MainActivity.this.startActivity(intent);
+
+                }else showCustomDialogue();
 
             }
         });
@@ -205,9 +230,12 @@ public class MainActivity extends AppCompatActivity {
                 openInstagram("https://www.instagram.com/chin_mai_kulkarni/");
             }
         });
-
     }
 
+
+
+
+//This API is called when app is launched, here device ID is passed to backend.
     private void callInitialLoadApi(final Context context) {
             final RequestQueue queue;
             queue = MySingleton.getInstance(context).getRequestQueue();
@@ -313,6 +341,41 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    private boolean isInternetConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiConnection = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConnection = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if ((wifiConnection != null && wifiConnection.isConnected()) || (mobileConnection != null && mobileConnection.isConnected())) {
+            return true;
+        } else return false;
+
+    }
+
+
+    private void showCustomDialogue() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Please connect to internet to Proceed")
+                .setCancelable(false)
+                .setTitle("No Internet")
+                .setIcon(R.drawable.nointernet)
+                .setPositiveButton("Connect", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onBackPressed();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
     }
 
 

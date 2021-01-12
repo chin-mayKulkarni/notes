@@ -1,8 +1,13 @@
 package com.notes.test.ui.SyllabusCopy;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +76,21 @@ public class SyllabusCopyFragment extends Fragment {
         syllabusCopyViewModel = ViewModelProviders.of(this).get(SyllabusCopyViewModel.class);
         View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
 
+
+        return root;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isInternetConnected()) {
+            processWithInternet(getView());
+        } else showCustomDialogue();
+    }
+
+    private void processWithInternet(final View root) {
+
         showProgressBar(root);
         MobileAds.initialize(getContext(), new OnInitializationCompleteListener() {
             @Override
@@ -84,7 +104,9 @@ public class SyllabusCopyFragment extends Fragment {
         mAdView.loadAd(adRequest);
 
         jsonBranch.add("BRANCH");
-        getBranchDetailsForNotes(getContext(), root);
+        if (!isInternetConnected()){
+            showCustomDialogue();
+        }else getBranchDetailsForNotes(getContext(), root);
 
         Spinner dropdown = root.findViewById(R.id.branch_spinner_sc);
         btn_go = root.findViewById(R.id.btn_syllabus_go);
@@ -119,13 +141,6 @@ public class SyllabusCopyFragment extends Fragment {
             }
 
         });
-
-
-
-
-
-
-        return root;
     }
 
     private ArrayAdapter<String> adapterFunList(List<String> jsonBranch) {
@@ -188,5 +203,40 @@ public class SyllabusCopyFragment extends Fragment {
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
         root.setClickable(false);
+    }
+
+    private boolean isInternetConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiConnection = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileConnection = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if ((wifiConnection != null && wifiConnection.isConnected()) || (mobileConnection != null && mobileConnection.isConnected())) {
+            return true;
+        } else return false;
+
+    }
+
+
+    private void showCustomDialogue() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Please connect to internet to Proceed")
+                .setCancelable(false)
+                .setTitle("No Internet")
+                .setIcon(R.drawable.nointernet)
+                .setPositiveButton("Connect", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().onBackPressed();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
     }
 }
