@@ -1,7 +1,9 @@
 package com.notes.test.ui.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -151,7 +153,8 @@ public class FeedbackFragment extends Fragment {
                                     public void onResponse(JSONObject response) {
                                         Log.d("feedbackresponse", response.toString());
                                        if (response.toString().contains("O.K")){
-                                           clearAllfields();
+                                           //clearAllfields();
+                                           dialogueSuccess();
                                            Toast.makeText(getContext(),"Your feedback has been submitted successfully",Toast.LENGTH_LONG).show();
                                        }
 
@@ -191,6 +194,22 @@ public class FeedbackFragment extends Fragment {
 
         return root;
 
+    }
+
+    private void dialogueSuccess() {
+        //final EditText otpEditText = new EditText(getContext());
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle("Success")
+                .setMessage("Thanks for submitting your valuable feedback!!")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().onBackPressed();
+                        Log.d("Dialogue", "Success Dialogue :");
+                    }
+                })
+                .create();
+        dialog.show();
     }
 
     private void clearAllfields() {

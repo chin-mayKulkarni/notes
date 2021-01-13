@@ -186,16 +186,14 @@ public class MainActivity extends AppCompatActivity {
         whatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentWhatsapp = new Intent(Intent.ACTION_VIEW);
-                String url = "https://chat.whatsapp.com/EDkwCsWCErIF5AWNuVmYXJ";
-                intentWhatsapp.setData(Uri.parse(url));
-                intentWhatsapp.setPackage("com.whatsapp");
-                try {
-                    startActivity(intentWhatsapp);
-                } catch (ActivityNotFoundException e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse(url)));
-                }
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT,
+                        "Hey check out this amazing app where you can easily get Free VTU notes for all subjects : https://play.google.com/store/apps/details?id=com.notes.test" + BuildConfig.APPLICATION_ID);
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+
+
             }
         });
         telegram.setOnClickListener(new View.OnClickListener() {
