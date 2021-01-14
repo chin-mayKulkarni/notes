@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<String> jsonSem , jsonBranch;
     public static String FACEBOOK_URL = "https://www.facebook.com/chinmay.kulkarni.75839";
     public static String FACEBOOK_PAGE_ID = "chinmay.kulkarni.75839";
-
     private AppBarConfiguration mAppBarConfiguration;
     private AdView mAdView, mAdView2;
 
@@ -59,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
-
     }
 
     @Override
@@ -375,6 +373,4 @@ public class MainActivity extends AppCompatActivity {
         alert.show();
 
     }
-
-
 }

@@ -114,4 +114,11 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="banner2">ca-app-pub-1550066622057534/2378160832</string>
+    <string name="banner1">ca-app-pub-1550066622057534/3482454989</string>
+    <string name="banner3">ca-app-pub-1550066622057534/6025422495</string>
+    <string name="banner4">ca-app-pub-1550066622057534/6052330892</string>
+    <string name="banner5">ca-app-pub-1550066622057534/8825833893</string>
+    <string name="banner6">ca-app-pub-1550066622057534/6850407241</string>
+    <string name="interstitial1">ca-app-pub-1550066622057534/3315003835</string>
 </resources>

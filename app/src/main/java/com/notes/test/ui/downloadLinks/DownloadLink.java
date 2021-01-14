@@ -27,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
@@ -53,6 +54,9 @@ public class DownloadLink extends AppCompatActivity {
     static WebView webView1;
     private AdView mAdView;
 
+    private InterstitialAd mInterstitialAd;
+
+
 
 
     @Override
@@ -65,6 +69,10 @@ public class DownloadLink extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial1));
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -236,5 +244,13 @@ public class DownloadLink extends AppCompatActivity {
         return deviceID;
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.");
+        }
+    }
 }

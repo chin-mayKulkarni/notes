@@ -38,7 +38,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
                 ads:adSize="BANNER"
-                ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+                ads:adUnitId="@string/banner1">
             </com.google.android.gms.ads.AdView>
 
 
@@ -196,7 +196,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
                 ads:adSize="BANNER"
-                ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+                ads:adUnitId="@string/banner2">
             </com.google.android.gms.ads.AdView>
 
             <TextView
