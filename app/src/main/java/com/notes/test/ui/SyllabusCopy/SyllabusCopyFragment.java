@@ -1,5 +1,6 @@
 package com.notes.test.ui.SyllabusCopy;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,15 +18,10 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.android.volley.Request;
@@ -57,6 +53,7 @@ public class SyllabusCopyFragment extends Fragment {
     String branchSel;
     int branchPos = 0;
     private AdView mAdView;
+    static Activity activity;
 
 
     private SyllabusCopyViewModel syllabusCopyViewModel;
@@ -87,6 +84,7 @@ public class SyllabusCopyFragment extends Fragment {
         if (isInternetConnected()) {
             processWithInternet(getView());
         } else showCustomDialogue();
+        activity = getActivity();
     }
 
     private void processWithInternet(final View root) {
@@ -103,6 +101,9 @@ public class SyllabusCopyFragment extends Fragment {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
+        if (jsonBranch.size()> 2){
+            jsonBranch.clear();
+        }
         jsonBranch.add("BRANCH");
         if (!isInternetConnected()){
             showCustomDialogue();
@@ -179,6 +180,7 @@ public class SyllabusCopyFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgressBar(root);
+                showDialogue("Not Found!!", "Sorry, Syllabus Copies are not available at this time!! Please try after some time","OK");
 
             }
         });
@@ -238,5 +240,22 @@ public class SyllabusCopyFragment extends Fragment {
         AlertDialog alert = builder.create();
         alert.show();
 
+    }
+
+
+    public static void showDialogue(String Title, String message, String positiveButton ) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setTitle(Title)
+                .setIcon(R.drawable.notfound)
+                .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

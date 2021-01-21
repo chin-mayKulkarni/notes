@@ -57,7 +57,8 @@ public class GalleryViewModel extends ViewModel {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context,"Notes are not available for selected Subject",Toast.LENGTH_LONG).show();
+                GalleryFragment.showDialogue("Not Found!!","Sorry, Notes are not available for selected Subject!!","OK");
+                //Toast.makeText(context,"Notes are not available for selected Subject",Toast.LENGTH_LONG).show();
                 Log.d("error ", "error occured :::::" + error);
             }
         });

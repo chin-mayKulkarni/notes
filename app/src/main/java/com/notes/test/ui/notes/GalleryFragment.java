@@ -1,5 +1,6 @@
 package com.notes.test.ui.notes;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -64,6 +65,7 @@ public class GalleryFragment extends Fragment {
     String branchSel, subSel, semSel;
     private GalleryViewModel galleryViewModel;
     private AdView mAdView;
+    static Activity activity;
 
 
 
@@ -73,9 +75,6 @@ public class GalleryFragment extends Fragment {
                              final ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_gallery, container, false);
         galleryViewModel = ViewModelProviders.of(this).get(GalleryViewModel.class);
-
-
-
 
 
         final TextView textView = root.findViewById(R.id.text_gallery);
@@ -92,6 +91,7 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        activity = getActivity();
         if (isInternetConnected()) {
             processWithInternet(getView());
         } else showCustomDialogue();
@@ -117,6 +117,10 @@ public class GalleryFragment extends Fragment {
         List<String> spinnerArray =  new ArrayList<String>();
         spinnerArray.add("Branch");
         spinnerArray.add("ISE");
+        if (jsonBranch.size() > 1){
+            jsonSem.clear();
+            jsonBranch.clear();
+        }
         jsonSem.add("SEMESTER");
         jsonBranch.add("BRANCH");
         jsonSub.add("SUBJECT");
@@ -262,6 +266,22 @@ public class GalleryFragment extends Fragment {
 
     }
 
+    public static void showDialogue(String Title, String message, String positiveButton ) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setTitle(Title)
+                .setIcon(R.drawable.notfound)
+                .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     //To show loading spinner
     public void showProgressBar(View root){
         root.findViewById(R.id.loading_overlay).setVisibility(View.VISIBLE);
@@ -389,7 +409,8 @@ public class GalleryFragment extends Fragment {
 
                 jsonSub.clear();
                 jsonSub.add("Subject");
-                Toast.makeText(context,"Some error has occured",Toast.LENGTH_LONG).show();
+                showDialogue("Not Found!!", "Sorry Notes are not available for selected Branch and Sem", "OK");
+               // Toast.makeText(context,"Some error has occured",Toast.LENGTH_LONG).show();
                 hideProgressBar(root);
 
             }

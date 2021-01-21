@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -177,6 +179,10 @@ public class DonateFragment extends Fragment {
 
     private void dialogueToReadOTP() {
         final EditText otpEditText = new EditText(getContext());
+        otpEditText.setTextSize(20);
+        otpEditText.setGravity(View.TEXT_ALIGNMENT_CENTER);
+        otpEditText.setGravity(1);
+        otpEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
         AlertDialog dialog = new AlertDialog.Builder(getContext())
                 .setTitle("Enter OTP")
                 .setMessage("Please check yout mail inbox for OTP")
@@ -192,8 +198,13 @@ public class DonateFragment extends Fragment {
                 .create();
         dialog.show();
     }
+
     private void dialogueForWrongOTP() {
         final EditText otpEditText = new EditText(getContext());
+        otpEditText.setTextSize(20);
+        otpEditText.setGravity(View.TEXT_ALIGNMENT_CENTER);
+        otpEditText.setGravity(1);
+        otpEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
         AlertDialog dialog = new AlertDialog.Builder(getContext())
                 .setTitle("Enter OTP")
                 .setMessage("You have entered wrong OTP, Please enter again!!!")

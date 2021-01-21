@@ -12,18 +12,11 @@ import android.widget.Toast;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.notes.test.R;
-import com.notes.test.ui.MySingleton;
 import com.notes.test.ui.downloadLinks.DownloadLink;
 import com.notes.test.urlConstants;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONObject;
 
 import java.util.List;
 

@@ -93,7 +93,8 @@ public class SyllabusCopyViewModel extends ViewModel {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context,"Syllabus copy is not available for selected branch",Toast.LENGTH_LONG).show();
+                SyllabusCopyFragment.showDialogue("Not Found!!", "Syllabus copy is not available for selected branch", "Ok");
+                //Toast.makeText(context,"Syllabus copy is not available for selected branch",Toast.LENGTH_LONG).show();
                 Log.d("error ", "error occured :::::" + error);
             }
         });

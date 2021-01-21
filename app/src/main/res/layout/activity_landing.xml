@@ -34,6 +34,7 @@
                 xmlns:ads="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/adView"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
@@ -193,6 +194,7 @@
                 android:id="@+id/adView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
                 ads:adSize="BANNER"
@@ -236,12 +238,12 @@
 
                         <ImageView
                             android:id="@+id/donate_icon"
-                            android:layout_width="55dp"
-                            android:layout_height="55dp"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
                             android:layout_centerHorizontal="true"
                             android:clickable="true"
                             android:focusable="true"
-                            android:src="@drawable/icondonate" />
+                            android:src="@drawable/iconupload" />
 
                         <TextView
                             android:layout_width="110dp"
@@ -328,7 +330,7 @@
                             android:layout_height="62dp"
                             android:layout_marginTop="5dp"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/iconfbook" />
+                            android:src="@drawable/fbicon" />
 
                     </LinearLayout>
 
@@ -350,7 +352,7 @@
                             android:layout_height="65dp"
                             android:layout_marginTop="5dp"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/iconinsta" />
+                            android:src="@drawable/instaicon" />
 
                     </LinearLayout>
 
@@ -368,11 +370,10 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="62dp"
-                            android:layout_height="62dp"
-                            android:layout_marginTop="5dp"
+                            android:layout_width="73dp"
+                            android:layout_height="73dp"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/icontelegram" />
+                            android:src="@drawable/teleicon" />
 
                     </LinearLayout>
 
@@ -390,11 +391,11 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="55dp"
+                            android:layout_height="55dp"
                             android:layout_marginTop="10dp"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/iconshare" />
+                            android:src="@drawable/shareicon" />
 
                     </LinearLayout>
 

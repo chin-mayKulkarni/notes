@@ -1,5 +1,6 @@
 package com.notes.test.ui.questionpaper;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -63,6 +64,7 @@ public class HomeFragment extends Fragment {
     public List<String> jsonBranch = new ArrayList<String>();
     String branchSel, subSel, semSel;
     private AdView mAdView;
+    static Activity activity;
 
 
     public HomeFragment() {
@@ -87,6 +89,7 @@ public class HomeFragment extends Fragment {
         if (isInternetConnected()) {
             processWithInternet(getView());
         } else showCustomDialogue();
+        activity = getActivity();
     }
 
     public String appendDeviceId(String url){
@@ -113,6 +116,10 @@ public class HomeFragment extends Fragment {
         List<String> spinnerArray = new ArrayList<String>();
         spinnerArray.add("Branch");
         spinnerArray.add("ISE");
+        if (jsonBranch.size() > 1){
+            jsonSem.clear();
+            jsonBranch.clear();
+        }
         jsonSem.add("SEMESTER");
         jsonBranch.add("BRANCH");
         jsonSub.add("SUBJECT");
@@ -235,6 +242,24 @@ public class HomeFragment extends Fragment {
         });
 
     }
+
+
+    public static void showDialogue(String Title, String message, String positiveButton ) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setTitle(Title)
+                .setIcon(R.drawable.notfound)
+                .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 
     private boolean isInternetConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -391,7 +416,8 @@ public class HomeFragment extends Fragment {
 
                 jsonSub.clear();
                 jsonSub.add("Subject");
-                Toast.makeText(context, "Some error has occured", Toast.LENGTH_LONG).show();
+                showDialogue("Not Found!!", "Sorry, Question Papers are not found for selected Branch and Sem!!", "OK");
+                //Toast.makeText(context, "Some error has occured", Toast.LENGTH_LONG).show();
                 hideProgressBar(root);
 
             }

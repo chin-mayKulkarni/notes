@@ -12,11 +12,14 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +43,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -187,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT,
-                        "Hey check out this amazing app where you can easily get Free VTU notes for all subjects : https://play.google.com/store/apps/details?id=com.notes.test" + BuildConfig.APPLICATION_ID);
+                        "Hey!!! Check out this amazing app where you can easily get Free VTU notes for all subjects : https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID);
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
 
@@ -238,13 +242,23 @@ public class MainActivity extends AppCompatActivity {
             final String[] jsonObject = new String[1];
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                    /*urlConstants.URL_TEST */getApi(),
+                    getApi(),
                     (JSONObject) null,
                     new Response.Listener<JSONObject>() {
 
                         @Override
                         public void onResponse(JSONObject response) {
                             jsonObject[0] = response.toString();
+                            try {
+                                String update = response.getString("app_force_update");
+                                String version = response.getString("app_version");
+                                if ((!update.contains("NO")) && !version.endsWith(String.valueOf(BuildConfig.VERSION_CODE))){
+                                    showUpdateDialogue();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                             Log.d("response", jsonObject[0]);
                         }
                     }, new Response.ErrorListener() {
@@ -372,5 +386,27 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.show();
 
+    }
+
+    private void showUpdateDialogue() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("New version of app is available on Play Store, please update to proceed")
+                .setCancelable(false)
+                .setTitle("Update the app")
+                .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID)));
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onBackPressed();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

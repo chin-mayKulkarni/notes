@@ -248,7 +248,7 @@ public class DownloadLink extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
+            //mInterstitialAd.show();
         } else {
             Log.d("TAG", "The interstitial wasn't loaded yet.");
         }

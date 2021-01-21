@@ -52,7 +52,8 @@ public class HomeViewModel extends ViewModel {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context,"Notes are not available for selected Subject",Toast.LENGTH_LONG).show();
+                HomeFragment.showDialogue("Not Found!!","Sorry, Question Papers are not available for selected Subject!!","OK");
+                //Toast.makeText(context,"Notes are not available for selected Subject",Toast.LENGTH_LONG).show();
                 Log.d("error ", "error occured :::::" + error);
             }
         });
