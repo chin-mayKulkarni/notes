@@ -156,7 +156,7 @@ public class SyllabusCopyFragment extends Fragment {
         queue = Volley.newRequestQueue(context);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                appendDeviceId(urlConstants.URL_MASTER),
+                appendDeviceId(urlConstants.URL_BAS + urlConstants.URL_MASTER),
                 (JSONObject) null,
                 new Response.Listener<JSONObject>() {
                     @Override

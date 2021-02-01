@@ -333,7 +333,7 @@ public class GalleryFragment extends Fragment {
 
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                appendDeviceId(urlConstants.URL_MASTER),
+                appendDeviceId(urlConstants.URL_BAS + urlConstants.URL_MASTER),
                 (JSONObject) null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -421,7 +421,7 @@ public class GalleryFragment extends Fragment {
 
 //Method which appends Sem and Branch to base url and returns sub api.
     private String getSubUrl(String sem, String branch) {
-        String subUrl = urlConstants.URL_GET_SUBJECT_BASE + "/" + galleryViewModel.stringNoSpace(sem) + "/" + galleryViewModel.stringNoSpace(branch);
+        String subUrl = urlConstants.URL_BAS + urlConstants.URL_GET_SUBJECT_BASE + "/" + galleryViewModel.stringNoSpace(sem) + "/" + galleryViewModel.stringNoSpace(branch);
         subUrl = appendDeviceId(subUrl);
         Log.d("json", "subURL::" + subUrl);
         return subUrl;

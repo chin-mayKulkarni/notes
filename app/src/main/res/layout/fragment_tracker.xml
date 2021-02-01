@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.Fragments.TrackerFragment">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/nav_header_vertical_spacing">
+
+        <EditText
+            android:id="@+id/email_tracker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/black"
+            android:hint="EMAIL"
+            android:visibility="gone"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:singleLine="true"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/errorEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_above="@+id/btn_ok"
+        android:textColor="@color/red"/>
+
+
+    <Button
+        android:id="@+id/btn_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/spacing_small"
+        android:text="OK"/>
+
+    <View
+        android:id="@+id/view_id"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/brand"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:id="@+id/earningsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/earningRelative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/spacing_small">
+
+                <TextView
+                    android:id="@+id/rupeeRedemeed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_earning" />
+
+                <TextView
+                    android:id="@+id/totalRedemeed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_toRightOf="@+id/rupeeRedemeed"
+                    android:text="0.0"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_earning" />
+
+                <TextView
+                    android:id="@+id/textTotalRedemed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rupeeRedemeed"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/spacing_small"
+                    android:text="Redemeed"/>
+
+
+
+                <TextView
+                    android:id="@+id/rupeeEarned"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹"
+                    android:textColor="@color/white"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:layout_toStartOf="@+id/totalEarned"
+                    android:textSize="@dimen/text_earning" />
+
+                <TextView
+                    android:id="@+id/totalEarned"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.0"
+                    android:layout_alignParentEnd="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_earning" />
+
+                <TextView
+                    android:id="@+id/textTotalEarnings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/rupeeEarned"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/spacing_small"
+                    android:text="Earned"/>
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_normal"
+                android:layout_margin="5dp"
+                android:scrollbars="vertical"
+                tools:context=".ui.downloadLinks.DownloadLink" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/btn_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_redeem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Redeem" />
+
+        <Button
+            android:id="@+id/btn_showStatements"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Show Statements" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/loading_overlay_traker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBlacktransparent"
+        android:contentDescription="LOADING"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+
+
+
+
+
+</RelativeLayout>

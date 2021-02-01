@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativeLayoutTracker"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true"
+    android:background="@drawable/border"
+    app:cardBackgroundColor="@color/grey">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewHeaderTracker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:textStyle="bold"
+            android:text="Header"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textAllCaps="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:contentDescription="header"/>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="7dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/numberOfDownloadsTracker"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"
+                android:text="200"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"
+                android:text=" Views"
+                android:textColor="@color/white"/>
+
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textViewTracker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:text="This is description"
+            android:textColor="@color/greyDescriprion"
+            android:layout_marginLeft="5dp"
+            android:textSize="16sp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white"/>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

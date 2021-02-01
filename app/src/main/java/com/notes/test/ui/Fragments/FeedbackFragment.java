@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -132,6 +134,7 @@ public class FeedbackFragment extends Fragment {
             public void onClick(View v) {
 //TODO : call api and send data to back end
                 validateInput();
+                showProgressBar(root);
                 //clearAllfields();
                 if (errortext.getVisibility() != View.VISIBLE){
                    // jsonObject = createJson();
@@ -146,7 +149,7 @@ public class FeedbackFragment extends Fragment {
                     postParam.put("feed_back", feedback_content.getText().toString());
 
                         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
-                                urlConstants.URL_FEEDBACK, new JSONObject(postParam),
+                                urlConstants.URL_BAS + urlConstants.URL_FEEDBACK, new JSONObject(postParam),
                                 new Response.Listener<JSONObject>() {
 
                                     @Override
@@ -154,7 +157,7 @@ public class FeedbackFragment extends Fragment {
                                         Log.d("feedbackresponse", response.toString());
                                        if (response.toString().contains("O.K")){
                                            //clearAllfields();
-                                           dialogueSuccess();
+                                           dialogueSuccess(root);
                                            Toast.makeText(getContext(),"Your feedback has been submitted successfully",Toast.LENGTH_LONG).show();
                                        }
 
@@ -196,7 +199,8 @@ public class FeedbackFragment extends Fragment {
 
     }
 
-    private void dialogueSuccess() {
+    private void dialogueSuccess(View root) {
+        hideProgressBar(root);
         //final EditText otpEditText = new EditText(getContext());
         AlertDialog dialog = new AlertDialog.Builder(getContext())
                 .setTitle("Success")
@@ -267,6 +271,20 @@ public class FeedbackFragment extends Fragment {
         //String version = sharedPreferences.getString("Version", " ");
         Log.d("fromSharedpred", deviceID);
         return deviceID;
+
+    }
+
+    public void showProgressBar(View root){
+        root.findViewById(R.id.loading_overlay_feedback).setVisibility(View.VISIBLE);
+        root.findViewById(R.id.loading_overlay_feedback).sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
+        root.findViewById(R.id.loading_overlay_feedback).requestFocus();
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        root.setClickable(false);
+    }
+
+    public void hideProgressBar(View root){
+        root.findViewById(R.id.loading_overlay_feedback).setVisibility(View.GONE);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
     }
 }

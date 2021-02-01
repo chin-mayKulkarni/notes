@@ -102,7 +102,7 @@ public class SyllabusCopyViewModel extends ViewModel {
     }
 
     private String getApi(String branchSel, Context context) {
-        String api = urlConstants.URL_SYLLABUS;
+        String api = urlConstants.URL_BAS + urlConstants.URL_SYLLABUS;
 
         api = api + "/" + stringNoSpace(branchSel);
         api = appendDeviceId(api, context);

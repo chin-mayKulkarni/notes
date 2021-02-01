@@ -98,19 +98,26 @@ public class MainActivity extends AppCompatActivity {
         CardView qpNotes = findViewById(R.id.qp_card);
         LinearLayout facebook = findViewById(R.id.ButtonFacebook);
         CardView syllabuscopy = findViewById(R.id.sc_card);
-        CardView supportUs = findViewById(R.id.support_card);
         LinearLayout instagram = findViewById(R.id.ButtonInstagram);
         LinearLayout telegram = findViewById(R.id.buttonTelegram);
         LinearLayout whatsapp = findViewById(R.id.ButtonWhatsapp);
         TextView feedback = findViewById(R.id.feedbackText);
         TextView aboutUs = findViewById(R.id.aboutText);
         ImageView upload_card = findViewById(R.id.donate_icon);
+        ImageView tracker_card = findViewById(R.id.tracker_icon);
 
-        supportUs.setOnClickListener(new View.OnClickListener() {
+        tracker_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(urlConstants.URL_BUY_COFFEE)));
+                if (isInternetConnected()) {
+                    Intent intent = new Intent(MainActivity.this,
+                            FragmentHolder.class);
+                    intent.putExtra("Header", "Tracker");
+                    intent.putExtra("fragmentName", "TrackerFragment");
+                    MainActivity.this.startActivity(intent);
+                }else showCustomDialogue();
+
+
             }
         });
 
@@ -273,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String getApi() {
         String api;
-        api = urlConstants.URL_DEVICE_ID + "/" + getDatFromSharedpref();
+        api = urlConstants.URL_BAS + urlConstants.URL_DEVICE_ID + "/" + getDatFromSharedpref();
         return api;
     }
 

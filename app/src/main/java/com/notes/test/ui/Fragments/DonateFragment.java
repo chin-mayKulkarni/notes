@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -97,7 +99,8 @@ public class DonateFragment extends Fragment {
             public void onClick(View v) {
                 validateInput();
                 if (errortext.getVisibility() != View.VISIBLE){
-                    callOTPService();
+                    callOTPService(root);
+                    showProgressBar(root);
                     //dialogueToReadOTP();
 
                 }
@@ -108,7 +111,21 @@ public class DonateFragment extends Fragment {
 
     }
 
-    private void callOTPService() {
+    public void showProgressBar(View root){
+        root.findViewById(R.id.loading_overlay_donate).setVisibility(View.VISIBLE);
+        root.findViewById(R.id.loading_overlay_donate).sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
+        root.findViewById(R.id.loading_overlay_donate).requestFocus();
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        root.setClickable(false);
+    }
+
+    public void hideProgressBar(View root){
+        root.findViewById(R.id.loading_overlay_donate).setVisibility(View.GONE);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+    }
+
+    private void callOTPService(final View root) {
 
         // jsonObject = createJson();
 
@@ -123,7 +140,7 @@ public class DonateFragment extends Fragment {
 
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
-                urlConstants.URL_CONTACT_US, new JSONObject(postParam),
+                urlConstants.URL_BAS + urlConstants.URL_CONTACT_US, new JSONObject(postParam),
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -133,12 +150,14 @@ public class DonateFragment extends Fragment {
                         if (response.toString().contains("no need of otp validation")){
                             clearAllfields();
                             dialogueSuccess();
+                            hideProgressBar(root);
                            // Toast.makeText(getContext(),"Your Information has been submitted successfully",Toast.LENGTH_LONG).show();
                            // getActivity().onBackPressed();
                         }
                         if (response.toString().contains("OTP has been shared")){
                             //clearAllfields();
-                            dialogueToReadOTP();
+                            dialogueToReadOTP(root);
+                            hideProgressBar(root);
                             Toast.makeText(getContext(),"OTP has been shared",Toast.LENGTH_LONG).show();
                             //getActivity().onBackPressed();
                         }
@@ -177,9 +196,10 @@ public class DonateFragment extends Fragment {
         submit.setEnabled(false);
     }
 
-    private void dialogueToReadOTP() {
+    private void dialogueToReadOTP(final View root) {
         final EditText otpEditText = new EditText(getContext());
         otpEditText.setTextSize(20);
+        hideProgressBar(root);
         otpEditText.setGravity(View.TEXT_ALIGNMENT_CENTER);
         otpEditText.setGravity(1);
         otpEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
@@ -191,7 +211,8 @@ public class DonateFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String OTP = String.valueOf(otpEditText.getText());
-                        sendOTPforVerification(OTP);
+                        showProgressBar(root);
+                        sendOTPforVerification(OTP, root);
                         Log.d("OTP", "OTP :" + OTP);
                     }
                 })
@@ -199,9 +220,10 @@ public class DonateFragment extends Fragment {
         dialog.show();
     }
 
-    private void dialogueForWrongOTP() {
+    private void dialogueForWrongOTP(final View root) {
         final EditText otpEditText = new EditText(getContext());
         otpEditText.setTextSize(20);
+        hideProgressBar(root);
         otpEditText.setGravity(View.TEXT_ALIGNMENT_CENTER);
         otpEditText.setGravity(1);
         otpEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
@@ -213,7 +235,7 @@ public class DonateFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String OTP = String.valueOf(otpEditText.getText());
-                        sendOTPforVerification(OTP);
+                        sendOTPforVerification(OTP, root);
                         Log.d("OTP", "OTP :" + OTP);
                     }
                 })
@@ -224,7 +246,7 @@ public class DonateFragment extends Fragment {
         //final EditText otpEditText = new EditText(getContext());
         AlertDialog dialog = new AlertDialog.Builder(getContext())
                 .setTitle("Success")
-                .setMessage("Thank you for reaching out to us, we'll contact you soon!!")
+                .setMessage("Thank you for reaching out to us, Please check your email Inbox!!")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -236,11 +258,11 @@ public class DonateFragment extends Fragment {
         dialog.show();
     }
 
-    private void sendOTPforVerification(String otp) {
+    private void sendOTPforVerification(String otp, final View root) {
         final RequestQueue queue;
         queue = MySingleton.getInstance(getContext()).getRequestQueue();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                urlConstants.URL_VALIDATE_OTP + "/" + otp + "/" + getDeviceId(getContext()),
+                urlConstants.URL_BAS + urlConstants.URL_VALIDATE_OTP + "/" + otp + "/" + getDeviceId(getContext()),
                 (JSONObject) null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -248,6 +270,7 @@ public class DonateFragment extends Fragment {
 
                         //TODO : if we get positive response show happy dialogue.
                         if (response.toString().contains("O.K")){
+                            hideProgressBar(root);
                             dialogueSuccess();
                         }
 
@@ -257,7 +280,7 @@ public class DonateFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error.toString().contains("AuthFailureError")){
-                    dialogueForWrongOTP();
+                    dialogueForWrongOTP(root);
                 }
                 Toast.makeText(getContext(),"Error while submitting OTP",Toast.LENGTH_LONG).show();
                 Log.d("error ", "error occured :::::" + error);
@@ -272,7 +295,7 @@ public class DonateFragment extends Fragment {
             errortext.setVisibility(View.VISIBLE);
             errortext.setText("Please accept Terms and Conditions");
             getStringForTnC("terms", "title");
-        } else if ((!email.getText().toString().contains("@")) || !email.getText().toString().endsWith(".com")) {
+        } else if ((!email.getText().toString().contains("@")) || !email.getText().toString().toUpperCase().endsWith(".COM")) {
             errortext.setVisibility(View.VISIBLE);
             errortext.setText("Please enter valid emailID");
         } else if (phoneNumber.getText().toString().length() != 10) {
@@ -353,7 +376,7 @@ public class DonateFragment extends Fragment {
 
     private String getTnCApi() {
         Log.d("tncApi", "tncApi"+ urlConstants.URL_TERMS_AND_CONDITIONS + "/" + getDeviceId(getContext()));
-        return urlConstants.URL_TERMS_AND_CONDITIONS + "/" + getDeviceId(getContext());
+        return urlConstants.URL_BAS + urlConstants.URL_TERMS_AND_CONDITIONS + "/" + getDeviceId(getContext());
     }
 
     private static String getDeviceId(Context context) {
@@ -363,4 +386,5 @@ public class DonateFragment extends Fragment {
         Log.d("fromSharedpred", deviceID);
         return deviceID;
     }
+
 }

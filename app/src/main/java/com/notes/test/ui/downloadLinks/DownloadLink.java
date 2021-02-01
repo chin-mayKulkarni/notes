@@ -104,7 +104,7 @@ public class DownloadLink extends AppCompatActivity {
             else if (selectMethod.equals("QP")){
                 extractDataforQP(jsonArray);
             } else extractDataforSyllabus(jsonArray);
-            //TODO : Implement recycler view using https://www.javatpoint.com/android-recyclerview-list-example
+//TODO : Implement recycler view using https://www.javatpoint.com/android-recyclerview-list-example
 
 
         } catch (JSONException e) {
@@ -232,7 +232,7 @@ public class DownloadLink extends AppCompatActivity {
     }
 
     private static String getDownloadCountApi(String id, Context context, String type) {
-        String url = urlConstants.URL_TRACK_DOWNLOADS + "/" + type + "/" + id + "/" + getDeviceId(context);
+        String url = urlConstants.URL_BAS + urlConstants.URL_TRACK_DOWNLOADS + "/" + type + "/" + id + "/" + getDeviceId(context);
         return url;
     }
 

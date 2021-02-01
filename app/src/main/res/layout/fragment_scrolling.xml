@@ -68,6 +68,7 @@
             android:inputType = "phone"
             android:maxLines="1"
             android:singleLine="true"
+            android:maxLength="10"
             android:textColorHint="@color/black" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -110,4 +111,20 @@
         android:visibility="gone"
         android:textColor="@color/red"
         android:layout_above="@id/btn_donate_go"/>
+
+    <FrameLayout
+        android:id="@+id/loading_overlay_donate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBlacktransparent"
+        android:contentDescription="LOADING"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
 </RelativeLayout>

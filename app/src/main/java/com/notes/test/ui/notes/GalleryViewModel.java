@@ -66,7 +66,7 @@ public class GalleryViewModel extends ViewModel {
     }
 
     private String getApi(String sem, String branch, String sub, Context context) {
-        String api = urlConstants.URL_TEST;
+        String api = urlConstants.URL_BAS + urlConstants.URL_NOTES;
 
         api = api + "/" + stringNoSpace(sem) + "/" + stringNoSpace(branch) + "/" + stringNoSpace(sub);
         api = appendDeviceId(api, context);

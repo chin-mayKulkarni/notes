@@ -262,7 +262,7 @@
 
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/support_card"
+                    android:id="@+id/tracker_card"
                     android:layout_width="wrap_content"
                     android:layout_height="80dp"
                     android:layout_gravity="top|right"
@@ -276,10 +276,13 @@
                         android:layout_height="match_parent">
 
                         <ImageView
-                            android:layout_width="45dp"
-                            android:layout_height="45dp"
+                            android:id="@+id/tracker_icon"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
                             android:layout_centerHorizontal="true"
-                            android:src="@drawable/iconhelpus" />
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:src="@drawable/icontrack" />
 
                         <TextView
                             android:layout_width="110dp"
@@ -287,7 +290,7 @@
                             android:layout_alignParentBottom="true"
                             android:layout_marginLeft="5dp"
                             android:layout_marginBottom="8dp"
-                            android:text="Support us!"
+                            android:text="Tracker"
                             android:textAlignment="center"
                             android:textColor="@color/black"
                             android:textSize="15sp" />

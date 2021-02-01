@@ -55,9 +55,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
                 //TODO :Get download code from http://www.codeplayon.com/2019/02/how-to-download-pdf-from-url-in-android-code-example/
                 String url1 = "http://www.pdf995.com/samples/pdf.pdf";
                 String url = "https://drive.google.com/file/d/1G29nJ5Bvf0UPVJ18tpPRJ7FGFIltLZLx/view";
-
                 String title = "pdfName";
-
                // DownloadLink.downloadfile(url1,title,view.getContext());
                 DownloadLink.openInBrowser(getFinalDownloadableLink(myListMainData.get(position).getDownloadableLink()),title,view.getContext(), myListMainData.get(position).getId(),myListMainData.get(position).getType());
                 Toast.makeText(view.getContext(),"click on item: "+myListMainData.get(position).getHeader(),Toast.LENGTH_LONG).show();

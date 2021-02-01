@@ -61,7 +61,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     private String getApi(String sem, String branch, String sub, Context context) {
-        String api = urlConstants.URL_QP;
+        String api = urlConstants.URL_BAS + urlConstants.URL_QP;
 
         api = api + "/" + stringNoSpace(sem) + "/" + stringNoSpace(branch) + "/" + stringNoSpace(sub);
         api = appendDeviceId(api, context);

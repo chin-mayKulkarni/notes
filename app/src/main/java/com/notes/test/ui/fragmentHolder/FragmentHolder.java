@@ -13,6 +13,7 @@ import com.notes.test.R;
 import com.notes.test.ui.Fragments.AboutUsFragment;
 import com.notes.test.ui.Fragments.FeedbackFragment;
 import com.notes.test.ui.Fragments.DonateFragment;
+import com.notes.test.ui.Fragments.TrackerFragment;
 import com.notes.test.ui.notes.GalleryFragment;
 import com.notes.test.ui.questionpaper.HomeFragment;
 import com.notes.test.ui.SyllabusCopy.SyllabusCopyFragment;
@@ -49,6 +50,9 @@ public class FragmentHolder extends AppCompatActivity {
             fragmentManager.beginTransaction().replace(R.id.fragment_layout , fragmentSent, "tag").commit();
         } else if (fragmentName.equals("HomeFragment")){
             HomeFragment fragmentSent = new HomeFragment();
+            fragmentManager.beginTransaction().replace(R.id.fragment_layout , fragmentSent, "tag").commit();
+        }else if (fragmentName.equals("TrackerFragment")){
+            TrackerFragment fragmentSent = new TrackerFragment();
             fragmentManager.beginTransaction().replace(R.id.fragment_layout , fragmentSent, "tag").commit();
         } else if (fragmentName.equals("feedback")){
             FeedbackFragment fragmentSent = new FeedbackFragment();
