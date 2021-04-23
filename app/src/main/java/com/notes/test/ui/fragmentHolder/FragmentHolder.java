@@ -14,20 +14,28 @@ import com.notes.test.ui.Fragments.AboutUsFragment;
 import com.notes.test.ui.Fragments.FeedbackFragment;
 import com.notes.test.ui.Fragments.DonateFragment;
 import com.notes.test.ui.Fragments.TrackerFragment;
+import com.notes.test.ui.Fragments.pdfViewer;
 import com.notes.test.ui.notes.GalleryFragment;
 import com.notes.test.ui.questionpaper.HomeFragment;
 import com.notes.test.ui.SyllabusCopy.SyllabusCopyFragment;
 
 public class FragmentHolder extends AppCompatActivity {
 
+    String url;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment_holder);
 
+
         Bundle bundle = getIntent().getExtras();
         String header = bundle.getString("Header");
         String fragmentName = bundle.getString("fragmentName");
+        if (fragmentName.equals("PdfViewer")){
+             url = bundle.getString("url");
+        }
 
 
 
@@ -62,6 +70,12 @@ public class FragmentHolder extends AppCompatActivity {
             fragmentManager.beginTransaction().replace(R.id.fragment_layout , fragmentSent, "tag").commit();
         }else if (fragmentName.equals("about")){
             AboutUsFragment fragmentSent = new AboutUsFragment();
+            fragmentManager.beginTransaction().replace(R.id.fragment_layout , fragmentSent, "tag").commit();
+        }else if (fragmentName.equals("PdfViewer")){
+            Bundle bundle = new Bundle();
+            bundle.putString("url", url);
+            pdfViewer fragmentSent = new pdfViewer();
+            fragmentSent.setArguments(bundle);
             fragmentManager.beginTransaction().replace(R.id.fragment_layout , fragmentSent, "tag").commit();
         }else {
             SyllabusCopyFragment fragmentSent = new SyllabusCopyFragment();

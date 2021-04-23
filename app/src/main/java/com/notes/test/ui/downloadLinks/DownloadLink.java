@@ -25,16 +25,19 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.github.barteksc.pdfviewer.PDFView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.notes.test.MainActivity;
 import com.notes.test.R;
 import com.notes.test.ui.MySingleton;
 import com.notes.test.ui.RecyclerView.MyListAdapter;
 import com.notes.test.ui.RecyclerView.MyListData;
+import com.notes.test.ui.fragmentHolder.FragmentHolder;
 import com.notes.test.urlConstants;
 
 import org.json.JSONArray;
@@ -53,16 +56,17 @@ public class DownloadLink extends AppCompatActivity {
     private MyListAdapter adapter;
     static WebView webView1;
     private AdView mAdView;
+    static PDFView pdfView;
 
     private InterstitialAd mInterstitialAd;
-
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_link);
+        DownloadLink.pdfView  = findViewById(R.id.pdfView);
+
 
         webView1 = findViewById(R.id.webView1);
         webView1.setVisibility(View.GONE);
@@ -206,13 +210,14 @@ public class DownloadLink extends AppCompatActivity {
         context.startActivity(browserIntent);
     }
 
+
     public static void incrementDownloadsApi(final Context context, String id, String type) {
         final RequestQueue queue;
         queue = MySingleton.getInstance(context).getRequestQueue();
         final String[] jsonObject = new String[1];
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                /*"https://vtu.pythonanywhere.com/apiv1/TrackDownloads/Notes/4/ladsbjfevgmfmttc"*/getDownloadCountApi(id, context, type),
+                getDownloadCountApi(id, context, type),
                 (JSONObject) null,
                 new Response.Listener<JSONObject>() {
 

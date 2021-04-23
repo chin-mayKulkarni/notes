@@ -1,6 +1,7 @@
 package com.notes.test.ui.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,20 +11,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.notes.test.MainActivity;
 import com.notes.test.R;
 import com.notes.test.ui.downloadLinks.DownloadLink;
+import com.notes.test.ui.fragmentHolder.FragmentHolder;
+import com.notes.test.ui.questionpaper.HomeViewModel;
 import com.notes.test.urlConstants;
 import com.squareup.picasso.Picasso;
 
 
 import java.util.List;
 
+import static com.notes.test.ui.downloadLinks.DownloadLink.incrementDownloadsApi;
+
 public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder>{
     LayoutInflater inflater;
     //private MyListData[] listdata;
     List<MyListData> myListMainData ;
+
+    private DownloadLink downloadLink;
 
     // RecyclerView recyclerView;
     public MyListAdapter(Context ctx, List<MyListData> listdata) {
@@ -36,7 +45,8 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
 
        // LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view= inflater.inflate(R.layout.list_item, parent, false);
-      //  ViewHolder viewHolder = new ViewHolder(listItem);
+
+        //  ViewHolder viewHolder = new ViewHolder(listItem);
         return new ViewHolder(view);
     }
 
@@ -57,7 +67,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
                 String url = "https://drive.google.com/file/d/1G29nJ5Bvf0UPVJ18tpPRJ7FGFIltLZLx/view";
                 String title = "pdfName";
                // DownloadLink.downloadfile(url1,title,view.getContext());
-                DownloadLink.openInBrowser(getFinalDownloadableLink(myListMainData.get(position).getDownloadableLink()),title,view.getContext(), myListMainData.get(position).getId(),myListMainData.get(position).getType());
+                openPdfViewer(getFinalDownloadableLink(myListMainData.get(position).getDownloadableLink()),title,view.getContext(), myListMainData.get(position).getId(),myListMainData.get(position).getType());
                 Toast.makeText(view.getContext(),"click on item: "+myListMainData.get(position).getHeader(),Toast.LENGTH_LONG).show();
             }
 
@@ -82,6 +92,16 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
     private String getFinalDownloadableLink(String url){
         String downloadableUrl = urlConstants.URL_BASE + url ;
         return downloadableUrl;
+    }
+
+    private void openPdfViewer(String finalDownloadableLink, String title, Context context, String id, String type){
+        Intent intent = new Intent(context,
+                FragmentHolder.class);
+        intent.putExtra("Header", title);
+        intent.putExtra("fragmentName", "PdfViewer");
+        intent.putExtra("url", finalDownloadableLink);
+        context.startActivity(intent);
+        incrementDownloadsApi(context, id, type);
     }
 
     @Override

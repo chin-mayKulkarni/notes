@@ -325,6 +325,7 @@ public class DonateFragment extends Fragment {
                     .setPositiveButton("Agree", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            agreed = true;
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putBoolean("agreed", true);
                             editor.apply();
